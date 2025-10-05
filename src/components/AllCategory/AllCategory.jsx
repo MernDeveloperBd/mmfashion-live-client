@@ -42,7 +42,7 @@ const AllCategory = () => {
 
   // 4) Tile component
   const Tile = ({ item, className, titleClass = "text-xl md:text-2xl" }) => {
-    const to = item.slug === "#" ? "#" : `/product/${encodeURIComponent(item.slug)}`;
+    const to = item.slug === "#" ? "#" : `/products?category=${encodeURIComponent(item.name)}`;  
     return (
       <Link
         to={to}

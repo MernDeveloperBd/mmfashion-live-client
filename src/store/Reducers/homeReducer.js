@@ -56,6 +56,7 @@ export const price_range_product = createAsyncThunk(
       if (query.sortPrice) params.set('sortPrice', query.sortPrice);
       if (query.pageNumber) params.set('pageNumber', query.pageNumber);
       if (query.perPage) params.set('perPage', query.perPage); // চাইলে client থেকে পাঠান
+      if (query.searchValue) params.set('searchValue', query.searchValue ? query.searchValue :''); 
 
       const { data } = await api.get(`/home/query-products?${params.toString()}`);
       return fulfillWithValue(data);
@@ -113,6 +114,7 @@ export const homeReducer = createSlice({
          .addCase(query_products.fulfilled, (state, action) => {
            state.products = action.payload?.products
             state.totalProduct = action.payload?.totalProduct
+            state.perPage = action.payload?.perPage
                  
         })  
      

@@ -9,6 +9,8 @@ import Shipping from "./pages/Shipping"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
 import { get_category } from "./store/Reducers/homeReducer"
+import CategoryShop from "./pages/Shop/CategoryShop"
+import SearchProducts from "./pages/Shop/SearchProducts"
 
 function App() {
  const dispatch = useDispatch()
@@ -20,8 +22,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/shop" element={<Shop />} />
         <Route path="/card" element={<Card />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path={`/products?`} element={<CategoryShop />} />
+        <Route path={`/products/search?`} element={<SearchProducts />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/product/details/:slug" element={<Details />} />

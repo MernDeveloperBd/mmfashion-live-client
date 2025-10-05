@@ -2,11 +2,17 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import { FaFacebookF } from 'react-icons/fa';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { customer_login, messageClear } from '../store/Reducers/authReducer';
 
 
 const Login = () => {
+    const { loader, successMessage, errorMessage, userInfo } = useSelector(state => state.auth)
+    const dispatch = useDispatch()
+ const navigate = useNavigate()
      const [state, setState] = useState({           
             email: '',
             password: ''
@@ -19,9 +25,22 @@ const Login = () => {
         }
          const login = (e) => {
             e.preventDefault()
-            console.log(state);
+              dispatch(customer_login(state))
             
         }
+           useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+        if(userInfo){
+            navigate('/')
+        }
+    }, [dispatch, navigate,userInfo,successMessage, errorMessage])
     return (
         <div>
             <Header />

@@ -22,6 +22,7 @@ const Badge = ({ count, children }) => {
 
 const Header = () => {
     const { categories} = useSelector(state => state.home)
+    const { userInfo} = useSelector(state => state.auth)
     const location = useLocation();
     const [showSidebar, setShowSidebar] = useState(false);
     const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
@@ -31,11 +32,10 @@ const Header = () => {
     const [showHeader, setShowHeader] = useState(true);
     const lastScrollY = useRef(0);
     const scrollThreshold = 100;
-
     // মক ডেটা
     const [wishlistCount, setWishlistCount] = useState(3);
     const [cartCount, setCartCount] = useState(7);
-    const user = true;
+    const user = false;
 
     // স্ক্রল ইভেন্ট হ্যান্ডেল করার জন্য useEffect
     useEffect(() => {
@@ -109,18 +109,19 @@ const Header = () => {
                                         <li><button className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">বাংলা</button></li>
                                     </ul>
                                 </div>
-                                {user ? <Link to="/dashboard" className="flex items-center gap-2 text-sm font-medium hover:text-brand transition-colors"><FaUser /> <span>Marifa Akter</span></Link> : <Link to="/login" className="flex items-center gap-2 text-sm font-medium hover:text-brand transition-colors"><FaLock /> <span>Login</span></Link>}
+                                {userInfo ? <Link to="/dashboard" className="flex items-center gap-2 text-sm font-medium hover:text-brand transition-colors"><FaUser /> <span>{userInfo?.name}</span></Link> : <Link to="/login" className="flex items-center gap-2 text-sm font-medium hover:text-brand transition-colors"><FaLock /> <span>Login</span></Link>}
                             </div>
                         </div>
                         {/* মেইন নেভিগেশন বার */}
                         <div className="flex justify-between items-center h-[45px] pt-1.5">
                             <Link to='/' className="w-[48px]"><img src="https://res.cloudinary.com/dpd5xwjqp/image/upload/v1757668954/Misam_Marifa_Fashion_World_oo94yx.png" alt="logo" className="w-full h-auto" /></Link>
                             <nav className="flex items-center gap-6">
-                                <Link to='/' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-brand dark:text-brand-light' : 'hover:text-brand'}`}>Home</Link>
-                                <Link to='/shop' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/shop' ? 'text-brand dark:text-brand-light' : 'hover:text-brand'}`}>Shop</Link>
-                                <Link to='/contact' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/contact' ? 'text-brand dark:text-brand-light' : 'hover:text-brand'}`}>Contact</Link>
+                                <Link to='/' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/' ? 'text-violet-600 dark:text-brand-light' : 'hover:text-brand'}`}>Home</Link>
+                                <Link to='/shop' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/shop' ? 'text-violet-600 dark:text-brand-light' : 'hover:text-brand'}`}>Shop</Link>
+                                <Link to='/contact' className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${location.pathname === '/contact' ? 'text-violet-600 dark:text-brand-light' : 'hover:text-brand'}`}>Contact</Link>
                             </nav>
                             <div className="flex items-center gap-3">
+                                <button type="button" className="border rounded px-2 p-1 border-teal-700  dark:text-gray-800 text-[#0d6b54] text-sm cursor-pointer">Become a seller</button>
                                 <Badge count={wishlistCount}><button className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand hover:text-white transition-all duration-300"><FaHeart size={16} /></button></Badge>
                                 <Badge count={cartCount}><button className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-brand hover:text-white transition-all duration-300"><FaShoppingCart size={16} /></button></Badge>
                             </div>
@@ -132,11 +133,12 @@ const Header = () => {
                 <header className="md-lg:hidden w-full bg-white dark:bg-gray-900 shadow-sm transition-colors duration-300">
                     <div className="flex items-center justify-between gap-4 p-1">
                         <button onClick={() => setShowSidebar(true)} className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"><FaList size={22} /></button>
+                         <button type="button" className="text-[#0d6b54] text-sm px-3">Become a seller</button>
                         <Link to='/' className="w-12 flex-shrink-0"><img src="https://res.cloudinary.com/dpd5xwjqp/image/upload/v1757668954/Misam_Marifa_Fashion_World_oo94yx.png" alt="logo" className="w-full h-auto" /></Link>
-                        <div className="flex-1 relative max-w-xs">
+                        {/* <div className="flex-1 relative max-w-xs">
                             <input type="text" placeholder="Search..." className="w-full pl-9 pr-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-brand" />
                             <IoMdSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                        </div>
+                        </div> */}
                     </div>
                 </header>
 
@@ -146,11 +148,11 @@ const Header = () => {
             {/* --- মোবাইল বটম নেভিগেশন বার --- */}
             <nav className="md-lg:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t pt-1.5 dark:border-gray-700 z-[1000]">
                 <ul className="flex justify-around items-center h-12">
-                    <li><Link to="/" className={`flex flex-col items-center gap-1 p-2 ${location.pathname === '/' ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`}><FaHome size={17} /><span className="text-[10px]">Home</span></Link></li>
-                    <li><Link to="/shop" className={`flex flex-col items-center gap-1 p-2 ${location.pathname === '/shop' ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`}><BsShop size={17} /><span className="text-[10px]">Shop</span></Link></li>
+                    <li><Link to="/" className={`flex flex-col items-center gap-1 p-2 ${location.pathname === '/' ? 'text-violet-600' : 'text-gray-600 dark:text-gray-400'}`}><FaHome size={17} /><span className="text-[10px]">Home</span></Link></li>
+                    <li><Link to="/shop" className={`flex flex-col items-center gap-1 p-2 ${location.pathname === '/shop' ? 'text-violet-600' : 'text-gray-600 dark:text-gray-400'}`}><BsShop size={17} /><span className="text-[10px]">Shop</span></Link></li>
                     <li><button className="flex flex-col items-center gap-1 p-2 text-gray-600 dark:text-gray-400"><Badge count={wishlistCount}><FaHeart size={17} /></Badge><span className="text-[10px]">Wishlist</span></button></li>
                     <li><button className="flex flex-col items-center gap-1 p-2 text-gray-600 dark:text-gray-400"><Badge count={cartCount}><FaShoppingCart size={17} /></Badge><span className="text-[10px]">Cart</span></button></li>
-                    <li>{user ? <Link to="/dashboard" className={`flex flex-col items-center gap-1 p-2 ${location.pathname.startsWith('/dashboard') ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`}><FaUser size={17} /><span className="text-[10px]">Profile</span></Link> : <Link to="/login" className="flex flex-col items-center gap-1 p-2 text-gray-600 dark:text-gray-400"><FaLock size={17} /><span className="text-[10px]">Login</span></Link>}</li>
+                    <li>{userInfo ? <Link to="/dashboard" className={`flex flex-col items-center gap-1 p-2 ${location.pathname.startsWith('/dashboard') ? 'text-brand' : 'text-gray-600 dark:text-gray-400'}`}><FaUser size={17} /><span className="text-[10px]">Profile</span></Link> : <Link to="/login" className="flex flex-col items-center gap-1 p-2 text-gray-600 dark:text-gray-400"><FaLock size={17} /><span className="text-[10px]">Login</span></Link>}</li>
                 </ul>
             </nav>
 
@@ -164,7 +166,8 @@ const Header = () => {
                 <nav className="p-4 flex-1 overflow-y-auto">
                     <Link onClick={() => setShowSidebar(false)} to='/contact' className={`flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors ${location.pathname === '/contact' ? 'text-brand dark:text-brand-light bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}>Contact Us</Link>
                     <Link onClick={() => setShowSidebar(false)} to='/about' className={`flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800`}>About Us</Link>
-                    {user ? <Link onClick={() => setShowSidebar(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"><FaUser /> <span>Dashboard</span></Link> : <Link onClick={() => setShowSidebar(false)} to="/login" className="flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"><FaLock /> <span>Login / Register</span></Link>}
+                    {userInfo ? <Link onClick={() => setShowSidebar(false)} to="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"><FaUser /> <span>Dashboard</span></Link> : <Link onClick={() => setShowSidebar(false)} to="/login" className="flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"><FaLock /> <span>Login / Register</span></Link>}
+                    <button type="button" className="text-[#0d6b54] text-sm px-3">Become a seller</button>
                 </nav>
 
                 {/* --- পরিবর্তন ২: সাইডবারের নিচের অংশ আপডেট করা হয়েছে --- */}

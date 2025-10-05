@@ -1,10 +1,10 @@
-// import homeReducer from "./Reducers/homeReducer"; 
 
-import  homeReducer  from "./Reducers/homeReducer";
-
+import homeReducer from "./Reducers/homeReducer";
+import authReducer from "./Reducers/authReducer";
 
 const rootReducers = {
-  home: homeReducer 
+  home: homeReducer ,
+  auth: authReducer 
 
 };
 

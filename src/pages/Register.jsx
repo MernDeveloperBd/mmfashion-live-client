@@ -3,12 +3,16 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import { FaFacebookF } from 'react-icons/fa';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-
-
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { customer_register, messageClear } from '../store/Reducers/authReducer';
+import { FadeLoader } from 'react-spinners';
 const Register = () => {
-
+    const{loader, successMessage, errorMessage, userInfo} = useSelector(state => state.auth)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
       const [state, setState] = useState({
         name: '',
         email: '',
@@ -22,11 +26,29 @@ const Register = () => {
     }
      const register = (e) => {
         e.preventDefault()
-        console.log(state);
-        
+        dispatch(customer_register(state))        
     }
+
+      useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage)
+            dispatch(messageClear())
+        }
+        if (errorMessage) {
+            toast.error(errorMessage)
+            dispatch(messageClear())
+        }
+        if (userInfo) {
+            navigate('/')
+        }
+    }, [dispatch, navigate, userInfo, successMessage, errorMessage])
     return (
         <div>
+            {
+                loader && <div className='w-screen h-screen flex justify-center items-center fixed left-0 top-0 bg-[#38303033] z-[999]'>
+                    <FadeLoader />
+                </div>
+            }
             <Header />
             <div className='bg-slate-200 mt-4'>
                 <div className='w-full justify-center items-center p-0 md:p-10 '>

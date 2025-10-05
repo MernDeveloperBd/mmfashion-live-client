@@ -1,5 +1,5 @@
 import { IoIosArrowDropright } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import ShopProducts from './ShopProducts'
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
@@ -16,14 +16,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { price_range_product, query_products } from "../../store/Reducers/homeReducer.js";
 
-const Shop = () => {
+const SearchProducts = () => {
+    let [searchParams, setSearchParams] = useSearchParams()
+    const category = searchParams.get('category')   
+    const searchValue = searchParams.get('value')   
     const dispatch = useDispatch()
-    const { products, totalProduct, latest_product, categories, priceRange, perPage } = useSelector(state => state.home)
+    const { products, totalProduct, latest_product, priceRange, perPage } = useSelector(state => state.home)
     console.log(products);
     const [pageNumber, setPageNumber] = useState(1)
     const [styles, setStyles] = useState('grid')
     const [filter, setFilter] = useState(false);
-    const [category, setCategory] = useState('')
     const [rating, setRatingQ] = useState('')
     const [sortPrice, setSortPrice] = useState('')
     const [state, setState] = useState({ values: [priceRange.low, priceRange.high] });
@@ -51,28 +53,19 @@ const Shop = () => {
         setState({ values: [priceRange.low, priceRange.high] })
     }, [priceRange])
 
-
-    const queryCategoey = (e, value) => {
-        if (e.target.checked) {
-            setCategory(value)
-        } else {
-            setCategory('')
-        }
-    }
-    console.log(products);
-
     useEffect(() => {
         dispatch(
             query_products({
-                low: state.values[0],
-                high: state.values[1],
+                low: state.values[0] || '',
+                high: state.values[1] || '',
                 category,
                 rating,
                 sortPrice,
-                pageNumber
+                pageNumber,
+                searchValue
             })
         )
-    }, [state.values, dispatch, category, pageNumber, rating, sortPrice])
+    }, [state.values, dispatch, category, pageNumber, rating, sortPrice, searchValue])
 
     return (
         <div>
@@ -82,7 +75,7 @@ const Shop = () => {
             <section className='bg-[url("https://res.cloudinary.com/dpd5xwjqp/image/upload/v1759381526/profile/uutlizbmkivizmulakng.jpg")] h-[220px] w-full md:w-[95%] mx-auto md:mt-6 bg-cover bg-no-repeat relative bg-left'>
                 <div className="absolute left-0 top-0 w-full md:w-[95%] mx-auto h-full text-white bg-black/40">
                     <div className="flex flex-col justify-center gap-1 items-center h-full w-full text-white">
-                        <h2 className="text-2xl font-bold">Shop by</h2>
+                        <h2 className="text-2xl font-bold">Shop From {category}</h2>
                         <div className="flex justify-center items-center gap-2 text-xl w-full">
                             <Link to="/">Home</Link>
                             <span className="pt-1">
@@ -114,7 +107,7 @@ const Shop = () => {
                                 }`}
                         >
                             {/* Category Filter */}
-                            <h2 className="text-2xl font-bold mb-3 text-slate-600">
+                          {/*   <h2 className="text-2xl font-bold mb-3 text-slate-600">
                                 Category
                             </h2>
                             <div className="py-2">
@@ -124,7 +117,7 @@ const Shop = () => {
                                         <label className='text-slate-600 block cursor-pointer' htmlFor={c.name}>{c.name}</label>
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
 
                             {/* Price Filter */}
                             <div className="py-2 flex flex-col gap-5">
@@ -248,14 +241,14 @@ const Shop = () => {
                                 </div>
                                 {/* products here */}
                                 <div className="pb-8">
-                                    <ShopProducts styles={styles} products={products} />
+                                    <ShopProducts styles={styles} products={products}/>
                                 </div>
                                 {
                                     totalProduct > perPage && <div>
-                                        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={totalProduct} perPage={perPage} showItem={Math.floor(totalProduct / perPage)} />
-                                    </div>
+                                    <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={totalProduct} perPage={perPage} showItem={Math.floor(totalProduct / perPage)} />
+                                </div>
                                 }
-
+                                
 
                             </div>
 
@@ -269,4 +262,4 @@ const Shop = () => {
     );
 };
 
-export default Shop;
+export default SearchProducts;
