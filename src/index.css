@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  /* আপনার কাস্টম স্ক্রিন সাইজগুলো এখানে ডিফাইন করা হলো */
+  --breakpoint-xl: 1400px;
+  --breakpoint-lg: 1080px;
+  --breakpoint-md-lg: 991px;
+  --breakpoint-md: 768px;
+  --breakpoint-sm: 576px;
+  --breakpoint-xs: 480px;
+  --breakpoint-2xs: 340px;
+  
+/* ঐচ্ছিক: ডার্ক মোডের জন্য কাস্টম কালার ভেরিয়েবল ডিফাইন করতে পারেন */
+   --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-background-dark: #111827; /* gray-900 */
+  --color-foreground-dark: #f9fafb; /* gray-50 */
+}
+
+/* colors */
+.primary_btn{
+  @apply bg-[#149777]
+}
+.hover{
+  @apply bg-[#0d6b54]
+}
+.dark_highlight{
+  @apply bg-[#1bc29a]
+}
+
+/* banner */
+/* Custom arrow styles for react-multi-carousel */
+.react-multiple-carousel__arrow {
+    background-color: rgba(128, 128, 128, 0.432) !important; /* ব্র্যান্ড কালার */
+    border: none !important;
+    min-width: 30px !important; /* ডিফল্ট সাইজ ছোট করা */
+    min-height: 30px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 20 !important;
+}
+
+.react-multiple-carousel__arrow::before {
+    color: white !important; /* আর্মো আইকনের কালার */
+    font-size: 16px !important; /* আইকন সাইজ অ্যাডজাস্ট */
+}
+
+.react-multiple-carousel__arrow--left {
+    left: 10px !important;    
+}
+
+.react-multiple-carousel__arrow--right {
+    right: 10px !important;
+}
+
+/* মোবাইলের জন্য আরও ছোট সাইজ */
+@media (max-width: 768px) {
+    .react-multiple-carousel__arrow {
+        min-width: 25px !important;
+        min-height: 25px !important;
+    }
+    .react-multiple-carousel__arrow::before {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .react-multiple-carousel__arrow {
+        min-width: 20px !important;
+        min-height: 20px !important;
+    }
+    .react-multiple-carousel__arrow::before {
+        font-size: 12px !important;
+    }
+}
+
+/* top products, latest product, discoutn products left right arrow button */
+.left_arrow{
+    @apply w-[30px] h-[30px] flex justify-center items-center bg-slate-300 border border-slate-300 rounded-full cursor-pointer hover:bg-slate-400 transition-all duration-300
+}
