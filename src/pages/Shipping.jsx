@@ -1,12 +1,16 @@
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDropright } from 'react-icons/io';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { place_order } from '../store/Reducers/orderReducer';
 
 const Shipping = () => {
+     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { userInfo } = useSelector(state => state.auth)
     const { state: { products, price, shipping_fee, items } } = useLocation()
-    console.log(products, price, shipping_fee, items);
     const [res, setRes] = useState(false)
     const [state, setState] = useState({
         name: '',
@@ -30,6 +34,19 @@ const Shipping = () => {
             setRes(true)
         }
     }
+
+       const placeOrder = () => {
+        dispatch(place_order({
+            price,
+            products,
+            shipping_fee,
+            shippingInfo: state,
+            userId: userInfo.id,
+            navigate,
+            items
+        }))
+    }
+    
     return (
         <div>
             <Header />
@@ -93,7 +110,7 @@ const Shipping = () => {
                                                         <input onChange={inputHandle} value={state.area} type="text" className='w-full px-3 py-2 border border-slate-200 outline-none focus:border-indigo-500 rounded-md' name='area' placeholder='area' id='province' />
                                                     </div>
                                                     <div className='flex flex-col gap-1 mt-3 w-full'>
-                                                        <button className='px-3 py-[6px] rounded-sm hover:shadow-indigo-500/20 hover:shadow-lg bg-[#149777] text-white'>Save</button>
+                                                        <button className='px-3 py-[6px] rounded-sm hover:shadow-indigo-500/20 hover:shadow-lg bg-[#149777] text-white cursor-pointer'>Save</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -112,18 +129,18 @@ const Shipping = () => {
                                     }
                                     <div />
                                     {
-                                        [1, 2].map((p, i) => <div key={i} className="flex bg-white p-4 flex-col gap-2">
+                                        products?.map((p, i) => <div key={i} className="flex bg-white p-4 flex-col gap-2">
                                             <div className="flex justify-start items-center">
-                                                <h2 className="text-md">MM Fashion world</h2>
+                                                <h2 className="text-md">{p.shopName}</h2>
                                             </div>
                                             {
-                                                [1, 2].map((p, i) => <div key={i} className="w-full flex flex-wrap px-2">
+                                               p?.products?.map((pp, i) => <div key={i} className="w-full flex flex-wrap px-2">
                                                     <div className="flex w-full md:w-7/12">
                                                         <div className="flex gap-2 justify-start items-center">
-                                                            <img className="w-[80px] h-[80px]" src="https://res.cloudinary.com/dpd5xwjqp/image/upload/v1752324558/products/gt2pout8feanpscvl9ev.jpg" alt="" />
+                                                            <img className="w-[80px] h-[80px]" src={pp.productInfo.images[0]} alt="shipping_product_image" />
                                                             <div className="pr-4 text-slate-600">
-                                                                <h2 className="text-md">Long cotton dress for women</h2>
-                                                                <span className="text-sm">Brand: Easy</span>
+                                                                <h2 className="text-md">{pp.productInfo.name}</h2>
+                                                                <span className="text-sm">Brand: {pp.productInfo.brand}</span>
                                                             </div>
 
                                                         </div>
@@ -132,9 +149,13 @@ const Shipping = () => {
 
                                                     <div className="flex justify-end w-full mt-3 md:w-5/12">
                                                         <div className="pl-0 md:pl-4">
-                                                            <h2 className="text-lg text-orange-500">TK 600</h2>
-                                                            <p className="line-through">TK 720</p>
-                                                            <p>-10%</p>
+                                                            <h2 className="text-lg text-orange-500">TK {pp?.productInfo?.price}</h2>
+                                                           {
+                                                                    pp?.productInfo?.oldPrice > 0 && <p className="line-through">TK {pp?.productInfo?.oldPrice}</p>
+                                                                }
+                                                             {
+                                                                    pp?.productInfo?.discount > 0 && <p>-{pp?.productInfo?.discount}%</p>
+                                                                }
                                                         </div>
                                                     </div>
                                                 </div>)
@@ -151,8 +172,8 @@ const Shipping = () => {
                                     <div className='bg-white font-medium p-5 text-slate-600 flex flex-col gap-3'>
                                         <h2 className='text-xl font-semibold'>Order Summary</h2>
                                         <div className='flex justify-between items-center'>
-                                            <span>Items Total({4})</span>
-                                            <span>${price}</span>
+                                            <span>Items Total({items})</span>
+                                            <span>TK{price}</span>
                                         </div>
                                         <div className='flex justify-between items-center'>
                                             <span>Delivery Fee</span>
@@ -166,7 +187,7 @@ const Shipping = () => {
                                             <span>Total</span>
                                             <span>TK {price + shipping_fee}</span>
                                         </div>
-                                        <button disabled={res ? false : true} className={`px-5 py-[6px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg  ${res ? 'bg-orange-500 cursor-pointer' : 'bg-orange-300'} text-sm text-white uppercase`}>Place Order</button>
+                                        <button onClick={placeOrder} disabled={res ? false : true} className={`px-5 py-[6px] rounded-sm hover:shadow-orange-500/20 hover:shadow-lg  ${res ? 'bg-orange-500 cursor-pointer' : 'bg-orange-300'} text-sm text-white uppercase`}>Place Order</button>
                                     </div>
 
                                 </div>

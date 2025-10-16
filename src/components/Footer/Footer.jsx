@@ -4,9 +4,9 @@ import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 const Footer = () => {
     return (
         <footer className='bg-[#f3f6fa]'>
-            <div className='w-[95%] flex flex-wrap mx-auto  border-b py-16 pb-6'>
-                <div className='w-full md:w-3/12'>
-                    <div className='flex flex-col gap-3'>
+            <div className='w-[95%] flex flex-wrap mx-auto  border-b py-8 pb-'>
+                <div className='w-full md:w-3/12 '>
+                    <div className='flex flex-col gap-3 '>
                         <img className='w-[90px] h-[90px] shadow-2xl' src="https://res.cloudinary.com/dpd5xwjqp/image/upload/v1759486364/mm_fashion_world_lgo_rdb5px.png" alt="logo" />
                         <ul className='flex flex-col gap-2 text-slate-600'>
                             <li><address>Mohammdapur, Dhaka</address></li>
@@ -25,36 +25,36 @@ const Footer = () => {
                             <div className='flex justify-between gap-[30px] md:gap-[80px]'>
                                 <ul className='flex flex-col gap-2 text-slate-600 text-sm'>
                                     <li>
-                                        <Link>About us</Link>
+                                        <Link to='/about'>About us</Link>
                                     </li>
                                     <li>
                                         <Link>About our shop</Link>
                                     </li>
                                     <li>
-                                        <Link>Delivery information</Link>
+                                        <Link >Delivery information</Link>
                                     </li>
                                     <li>
                                         <Link>privacy policy</Link>
                                     </li>
                                     <li>
-                                        <Link>Terms & Conditions</Link>
+                                        <Link to='/terms'>Terms & Conditions</Link>
                                     </li>
                                 </ul>
                                 <ul className='flex flex-col gap-2 text-slate-600 text-sm'>
                                     <li>
-                                        <Link>Shop</Link>
+                                        <Link to='/shop'>Shop</Link>
                                     </li>
                                     <li>
-                                        <Link>Latest Products</Link>
+                                        <Link to='/shop'>Latest Products</Link>
                                     </li>
                                     <li>
-                                        <Link>Top Products</Link>
+                                        <Link to='/shop'>Top Products</Link>
                                     </li>
                                     <li>
-                                        <Link>Discout Products</Link>
+                                        <Link to='/shop'>Discout Products</Link>
                                     </li>
                                     <li>
-                                        <Link>Contact us</Link>
+                                        <Link to='/contact-us'>Contact us</Link>
                                     </li>
                                 </ul>
 
@@ -74,7 +74,7 @@ const Footer = () => {
                             <button className='h-full absolute right-0 primary_btn text-white uppercase px-4 font-bold text-sm rounded-r'>Subscribe</button>
                         </div>
                         <ul className='flex justify-start items-center gap-3'>
-                            <a href="#" className="hover:text-brand text-sky-600"><FaFacebook size={20}/></a>
+                            <a href="https://www.facebook.com/mmfashionworldonline" target='_blank' className="hover:text-brand text-sky-600"><FaFacebook size={20}/></a>
                             <a href="#" className="hover:text-brand text-orange-600"><FaInstagram size={20}/></a>
                             <a
                                 href="https://wa.me/8801749889595"

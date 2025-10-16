@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import AllCategory from "../../components/AllCategory/AllCategory";
 import Banner from "../../components/Banner/Banner";
 import Category from "../../components/Category/Category";
 import Footer from "../../components/Footer/Footer";
@@ -8,6 +7,8 @@ import FeaturesProduct from "../../components/Products/FeaturesProduct";
 import Products from "../../components/Products/Products";
 import { useDispatch, useSelector } from "react-redux";
 import {  get_products } from "../../store/Reducers/homeReducer";
+import FeaturesProductGrid from "../../components/Products/FeaturesProductGrid";
+import FeaturesProductGridBottom from "../../components/Products/FeaturesProductGridBottom";
 
 
 const Home = () => {
@@ -26,13 +27,19 @@ const Home = () => {
             <div className="my-4">
                 <Category />
             </div>
+             <div className="py-[30px]">
+                <FeaturesProductGrid products={products}/>
+            </div>
              {/* Features product */}
             <div className="py-[30px]">
                 <FeaturesProduct products={products}/>
             </div>
-            <div className="my-4">
-                <AllCategory />
+           <div className="py-[30px]">
+                <FeaturesProductGridBottom products={products}/>
             </div>
+            {/* <div className="my-4">
+                <AllCategory />
+            </div> */}
            
             <div className="md:py-2">
                 <div className="w-[95%] flex flex-wrap mx-auto px-2">

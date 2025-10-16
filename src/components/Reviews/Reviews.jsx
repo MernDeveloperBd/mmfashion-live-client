@@ -39,12 +39,12 @@ const Reviews = ({ product }) => {
         productId: product._id,
         pageNumber
       }))
-      dispatch(get_product(product.slug))
+      dispatch(get_product(product.name))
       setRat('')
       setRe('')
       dispatch(messageClear())
     }
-  }, [successMessage])
+  }, [product,dispatch, pageNumber,successMessage])
 
   useEffect(() => {
     if (product._id) {
@@ -53,7 +53,7 @@ const Reviews = ({ product }) => {
         pageNumber
       }))
     }
-  }, [pageNumber, product]) 
+  }, [dispatch,pageNumber, product]) 
 
   return (
     <div className='mt-8'>

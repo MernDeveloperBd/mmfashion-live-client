@@ -1,118 +1,153 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AiFillHeart, AiOutlineShoppingCart } from 'react-icons/ai';
+import { FaEye } from 'react-icons/fa6';
+import toast from 'react-hot-toast';
+import { add_to_card, add_to_wishlist, messageClear } from '../../store/Reducers/cardReducer';
 
-const FALLBACK_IMG = "https://via.placeholder.com/600x450?text=Image";
+const FeatureProducts = ({ products = [] }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector(state => state.auth);
+  const { successMessage, errorMessage } = useSelector(state => state.card);
 
-const FeaturesProduct = ({ products = [] }) => {
-  // Safe helpers
-  const img0 = (p) => (Array.isArray(p?.images) && p.images[0]) || FALLBACK_IMG;
-  const title = (s, max = 22) => {
-    const t = s || "Product";
-    return t.length > max ? t.slice(0, max - 1) + "…" : t;
-  };
-  const toProduct = (p) => {
-    const idOrSlug = p?.slug || p?._id;
-    return idOrSlug ? `/product/details/${encodeURIComponent(idOrSlug)}` : "#";
-  };
-
-  // Ensure n items (placeholders if less)
-  const ensure = (arr, n) => {
-    const out = [...(arr || [])].slice(0, n);
-    while (out.length < n) {
-      const i = out.length;
-      out.push({ _id: `ph-${i}`, name: "Product", images: [FALLBACK_IMG], slug: "" });
+  const add_card = (id) => {
+    if (userInfo) {
+      dispatch(add_to_card({ userId: userInfo.id, quantity: 1, productId: id }));
+    } else {
+      navigate('/login');
     }
-    return out;
   };
 
-  // Split into 3 cards: 4+4+4 items
-  const card1 = ensure(products.slice(0, 4), 4);
-  const card2 = ensure(products.slice(4, 8), 4);
-  const card3 = ensure(products.slice(8, 12), 4);
+  const add_wishlist = (pro) => {
+    if (!userInfo?.id) return navigate('/login');
+    dispatch(add_to_wishlist({
+      userId: userInfo.id,
+      productId: pro._id,
+      name: pro.name,
+      price: pro.price,
+      image: pro.images?.[0],
+      discount: pro.discount,
+      rating: pro.rating,
+      slug: pro.slug
+    }));
+  };
 
-  // Reusable Card
-  const Card = ({ heading, items, linkText = "See all deals", linkTo = "#" }) => (
-    <div className="fp3-card bg-white border border-slate-200 p-4">
-      <h3 className="fp3-title text-[20px] font-bold text-slate-900 mb-3">{heading}</h3>
-      <div className="fp3-g2">
-        {items.map((p, idx) => (
-          <Link key={p?._id || p?.slug || `it-${idx}`} to={toProduct(p)} className="fp3-linkItem">
-            <div className="fp3-img-2x2">
-              <img
-                src={img0(p)}
-                alt={p?.name || "Product"}
-                onError={(e) => (e.currentTarget.src = FALLBACK_IMG)}
-                className="fp3-img"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <p className="fp3-item-name">{title(p?.name)}</p>
-          </Link>
-        ))}
-      </div>
-      <Link to={linkTo} className="fp3-link"> {linkText} </Link>
-    </div>
-  );
+  useEffect(() => {
+    if (successMessage) { toast.success(successMessage); dispatch(messageClear()); }
+    if (errorMessage)   { toast.error(errorMessage);   dispatch(messageClear()); }
+  }, [dispatch, successMessage, errorMessage]);
+
+  const fmtTk = (n) => `TK ${Number(n || 0).toLocaleString()}`;
 
   return (
-    <section className="fp3-wrap">
-      {/* Custom responsive CSS with your exact breakpoints */}
-      <style>{`
-        .fp3-wrap { width:95%; margin:0 auto; padding:16px 0; }
-        .fp3-grid { display:grid; grid-template-columns:1fr; gap:16px; }
-
-        .fp3-card { background:#fff; border:1px solid #e5e7eb; padding:16px; }
-        .fp3-title { margin-bottom:12px; }
-        .fp3-link { display:inline-block; margin-top:12px; color:#1d4ed8; font-weight:600; font-size:13px; text-decoration:none; }
-        .fp3-link:hover { color:#ea580c; }
-
-        .fp3-g2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-        .fp3-item-name { margin-top:6px; font-size:13px; color:#334155; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-        .fp3-img-2x2 { width:100%; height:130px; background:#f1f5f9; overflow:hidden; border-radius:6px; }
-        .fp3-img { width:100%; height:100%; object-fit:cover; transition:opacity .2s ease; }
-        .fp3-linkItem:hover .fp3-img { opacity:.95; }
-
-        /* Breakpoints: 340, 480, 576, 768, 991, 1080, 1400 */
-        @media (min-width:340px){ .fp3-img-2x2{ height:140px; } }
-        @media (min-width:480px){ .fp3-img-2x2{ height:150px; } }
-        @media (min-width:576px){ .fp3-img-2x2{ height:160px; } }
-        @media (min-width:768px){
-          .fp3-grid{ grid-template-columns: repeat(2, 1fr); gap:20px; }
-          .fp3-img-2x2{ height:170px; }
-        }
-        @media (min-width:991px){ .fp3-img-2x2{ height:180px; } }
-        @media (min-width:1080px){
-          .fp3-grid{ grid-template-columns: repeat(3, 1fr); gap:24px; }
-          .fp3-img-2x2{ height:185px; }
-        }
-        @media (min-width:1400px){ .fp3-img-2x2{ height:195px; } }
-      `}</style>
-
-      {/* Three cards side-by-side (responsive) */}
-      <div className="fp3-grid">
-        <Card
-          heading="Shop Fashion for less"
-          items={card1}
-          linkText="See all deals"
-          linkTo="/shop"
-        />
-        <Card
-          heading="Shop for your Fashion"
-          items={card2}
-          linkText="Discover more"
-          linkTo="shop"
-        />
-        <Card
-          heading="Top categories"
-          items={card3}
-          linkText="Explore more products"
-          linkTo="/shop"
-        />
+    <div className="w-full">
+      <div className="w-full flex justify-center">
+        <div className="text-center flex flex-col items-center">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Featured Products</h2>
+          <div className="w-[100px] h-[3px] bg-emerald-500 mt-3 rounded-full" />
+        </div>
       </div>
-    </section>
+
+      <div className="max-w-7xl mx-auto mt-6 px-2 sm:px-3 md:px-4">
+        {products?.length ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-x-4 gap-y-6">
+            {products.slice(0, 10).map((p, i) => {
+              const discount = Number(p?.discount) || 0;
+              const price    = Number(p?.price) || 0;
+              const original = discount > 0 && price > 0
+                ? Math.round(price / (1 - discount / 100))
+                : null;
+              const img = p?.images?.[0];
+
+              return (
+                <div
+                  key={p?._id || i}
+                  className="group bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md hover:-translate-y-[2px] transition flex flex-col h-full"
+                >
+                  {/* Image wrapper (fixed height for alignment) */}
+                  <div className="relative bg-white flex items-center justify-center h-42 sm:h-48 md:h-52 ">
+                    {discount > 0 && (
+                      <div className="absolute z-10 left-2 top-2 px-2 h-6 rounded bg-rose-600 text-white text-[11px] font-semibold shadow flex items-center">
+                        {discount}% off
+                      </div>
+                    )}
+
+                    <Link to={`/product/details/${p.slug}`} className=" w-full h-full flex items-center justify-center">
+                      <img
+                        src={img || 'https://via.placehold.co//320x320?text=No+Image'}
+                        alt={p?.name || 'Product'}
+                        loading="lazy"
+                        className="max-h-full w-full object-cover"
+                        width={320}
+                        height={290}
+                        onError={(e) => { e.currentTarget.src = 'https://via.placehold.co//320x320?text=No+Image'; }}
+                      />
+                    </Link>
+
+                    {/* Quick actions (top-right) — now includes Add to Cart */}
+                    <div className="absolute right-2 top-2 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition z-10">
+                      <button
+                        onClick={() => add_wishlist(p)}
+                        title="Add to wishlist"
+                        className="fCBtn"
+                        aria-label="Add to wishlist"
+                      >
+                        <AiFillHeart />
+                      </button>
+                      <Link
+                        to={`/product/details/${p.slug}`}
+                        title="View details"
+                        className="fCBtn"
+                        aria-label="View details"
+                      >
+                        <FaEye />
+                      </Link>
+                      <button
+                        onClick={() => add_card(p._id)}
+                        title="Add to cart"
+                        className="fCBtn"
+                        aria-label="Add to cart"
+                      >
+                        <AiOutlineShoppingCart />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Info block */}
+                  <div className="p-3 flex flex-col flex-1">
+                    <Link to={`/product/details/${p.slug}`}>
+                      {/* Title fixed height for alignment */}
+                      <h3 className="text-sm md:text-[15px] text-slate-900 font-medium leading-5 h-[38px] md:h-[44px] overflow-hidden">
+                        {p?.name || 'Product'}
+                      </h3>
+                    </Link>
+
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="text-sm md:text-base font-semibold text-slate-900">
+                        {fmtTk(price)}
+                      </span>
+                      {original && (
+                        <span className="text-xs md:text-sm text-gray-500 line-through">
+                          {fmtTk(original)}
+                        </span>
+                      )}                      
+                    </div>
+
+                    {/* Spacer to keep equal height even without bottom button */}
+                    <div className="flex-1" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center text-slate-500 py-10">No featured products to show</div>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default FeaturesProduct;
+export default FeatureProducts;

@@ -1,21 +1,49 @@
 
 import { FaCartPlus, FaEye, FaRegHeart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Ratings from "../../components/Ratings/Ratings";
+import toast from 'react-hot-toast';
+import { add_to_card, add_to_wishlist, messageClear } from '../../store/Reducers/cardReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
 
 const ShopProducts = ({ styles = "grid" , products}) => {
   // const [wishlist, setWishlist] = useState(new Set());
+    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector(state => state.auth);
+  const { successMessage, errorMessage } = useSelector(state => state.card);
   const isGrid = styles === "grid";
 
-/*   const toggleWishlist = (id) => {
-    setWishlist((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }; */
+   const add_card = (id) => {
+    if (userInfo) {
+      dispatch(add_to_card({ userId: userInfo.id, quantity: 1, productId: id }));
+    } else {
+      navigate('/login');
+    }
+  };
 
-  const cardClass = `group relative overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-[0_10px_25px_-15px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${isGrid ? "" : "flex"}`;
+    const add_wishlist = (pro) => {
+    if (!userInfo?.id) return navigate('/login');
+    dispatch(add_to_wishlist({
+      userId: userInfo.id,
+      productId: pro._id,
+      name: pro.name,
+      price: pro.price,
+      image: pro.images?.[0],
+      discount: pro.discount,
+      rating: pro.rating,
+      slug: pro.slug
+    }));
+  };
+
+   useEffect(() => {
+    if (successMessage) { toast.success(successMessage); dispatch(messageClear()); }
+    if (errorMessage)   { toast.error(errorMessage);   dispatch(messageClear()); }
+  }, [dispatch, successMessage, errorMessage]);
+
+
+  const cardClass = `group relative overflow-hidden rounded border border-zinc-100 bg-white shadow-[0_10px_25px_-15px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${isGrid ? "" : "flex"}`;
   const mediaClass = isGrid
     ? "relative overflow-hidden aspect-[4/3]"
     : "relative overflow-hidden w-5/12 md:w-2/5 h-44 md:h-56";
@@ -24,7 +52,7 @@ const ShopProducts = ({ styles = "grid" , products}) => {
  
 
   return (
-    <div className={`grid gap-5 ${isGrid ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
+    <div className={`grid gap-5 ${isGrid ? "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"}`}>
       {products?.map((product, i) => (
         <div key={i} className={cardClass}>
           {/* Media */}
@@ -42,7 +70,7 @@ const ShopProducts = ({ styles = "grid" , products}) => {
             </span>
 
             {product.discount > 0 && (
-              <span className="absolute right-3 top-3 rounded-full bg-[#7faf39] px-2.5 py-1 text-xs font-bold text-white">
+              <span className="absolute right-3 top-3 rounded-full bg-red-700 px-2.5 py-1 text-xs font-bold text-white">
                 -{product?.discount}%
               </span>
             )}
@@ -51,13 +79,13 @@ const ShopProducts = ({ styles = "grid" , products}) => {
             <div className="absolute inset-x-0 bottom-2 flex translate-y-8 items-center justify-center gap-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
               <button
                 aria-label="Add to wishlist"
-                onClick={() => (product?._id)}
-                className={`grid h-10 w-10 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 transition hover:bg-[#7faf39] hover:text-white ${product?._id ? "bg-[#7faf39] text-white" : ""}`}
+                onClick={() => add_wishlist(product)}
+                className={`grid h-10 w-10 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 transition hover:bg-[#7faf39] cursor-pointer hover:text-white ${product?._id ? "bg-[#7faf39] text-white" : ""}`}
               >
                 <FaRegHeart />
               </button>
               <Link
-                to={`/product/details/${product?.slug}`}
+                to={`/product/details/${product.slug}`}
                 aria-label="Quick view"
                 className="grid h-10 w-10 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 transition hover:bg-[#7faf39] hover:text-white"
               >
@@ -65,8 +93,8 @@ const ShopProducts = ({ styles = "grid" , products}) => {
               </Link>
               <button
                 aria-label="Add to cart"
-                
-                className="grid h-10 w-10 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 transition hover:bg-[#7faf39] hover:text-white"
+                onClick={() => add_card(product._id)}
+                className="grid h-10 w-10 place-items-center rounded-full bg-white text-zinc-700 shadow-md ring-1 ring-black/5 transition hover:bg-[#7faf39] hover:text-white cursor-pointer"
               >
                 <FaCartPlus />
               </button>
@@ -76,29 +104,25 @@ const ShopProducts = ({ styles = "grid" , products}) => {
           {/* Info */}
           <div className={infoClass}>
             <Link
-              to={`/product/details/${product?.slug}`}
+             to={`/product/details/${product.slug}`}
               className="truncate text-base font-semibold text-zinc-800 hover:text-[#7faf39]"
               title={product.name}
             >
               {product.name}
             </Link>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col md:flex-row  md:justify-between items-start md:items-center">
               <div className="mt-2 flex items-center gap-2">
-              <span className="text-lg font-bold text-zinc-900">TK{product.price}</span>
-              <span className="text-sm font-medium text-red-400 line-through">{product?.oldPrice}</span>
-            </div>
-              <div className="mt-1 text-sm font-semibold bg-[#0d6b54] text-white px-1.5 py-0.5 "> 
-              TK {(product?.resellingPrice)}
-            </div>
-            </div>
-            
-
-            {/* Reselling price */}
-            
+              <span className="text-sm md:text-md font-bold text-zinc-900">TK {product.price}</span>
+              {
+                product?.oldPrice > 0 && <span className="text-sm font-medium text-red-400 line-through">TK {product?.oldPrice}</span>
+              }              
+            </div>           
+              
+            </div>          
 
             <div className="mt-2 flex items-center">
               <Ratings ratings={product?.rating} />
-              <span className="ml-2 text-xs text-zinc-500">{product?.rating}</span>
+              <span className="ml-2 text-xs text-zinc-500">({product?.rating})</span>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-const stripe_sky = 'pk_test_51Nk8Y4F0B89ncn3xWB6ZN3GsbVIVL7Jqfa3jxtIOpPkKHcleHZw4EMPJKd4cRwm34ZARBeYmAWwu3VxyYL1gb6OT00UKNSvfvb'
+const stripe_sky = 'pk_test_51Rl7FN6uWmc1ye7HzEdg0gw0h5dJJHTxIkfMqNpknJP0Q7XJMEdhoj8wF2X5jF7erH7pJXmF72PXWAaO6tFhfLmq006IxS4qMO'
 
 
 const production = 'production'
@@ -12,7 +12,7 @@ if (mode === production) {
     app_url = "https://shopmy-cyan.vercel.app"
     api_url = "https://api-ecommerce-fos4.onrender.com"
 } else {
-    app_url = 'http://localhost:3000'
+    app_url = 'http://localhost:5173'
     api_url = 'http://localhost:5000'
 }
 

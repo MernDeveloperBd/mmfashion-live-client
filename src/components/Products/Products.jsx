@@ -68,7 +68,7 @@ const Products = ({ title, products = [] }) => {
                     {(pl?.name || 'Product').slice(0, 40)}
                   </h2>
                   {pl?.price != null && (
-                    <span className='text-md font-bold text-gray-800'>${pl.price}</span>
+                    <span className='text-sm md:text-md font-bold text-gray-800'>TK {pl.price}</span>
                   )}
                 </div>
               </Link>

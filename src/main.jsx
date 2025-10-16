@@ -5,7 +5,7 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { Toaster } from 'react-hot-toast';
-import { lazy, Suspense } from 'react'
+import {  Suspense } from 'react'
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
@@ -16,11 +16,12 @@ createRoot(document.getElementById('root')).render(
     }>
       <App />
       <Toaster
-        position="top-right"
+        position="top-center"
         toastOptions={{
           style: {
             background: '#283046',
-            color: 'white'
+            color: 'white',
+            fontSize:'13px'
           }
         }}
       />

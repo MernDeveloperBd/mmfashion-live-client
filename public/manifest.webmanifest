@@ -1,0 +1,20 @@
+{
+  "name": "MM Fashion World",
+  "short_name": "MMFW",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6b54",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/dpd5xwjqp/image/upload/v1757668954/Misam_Marifa_Fashion_World_oo94yx.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://res.cloudinary.com/dpd5xwjqp/image/upload/v1757668954/Misam_Marifa_Fashion_World_oo94yx.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ const SearchProducts = () => {
     const searchValue = searchParams.get('value')   
     const dispatch = useDispatch()
     const { products, totalProduct, latest_product, priceRange, perPage } = useSelector(state => state.home)
-    console.log(products);
+ 
     const [pageNumber, setPageNumber] = useState(1)
     const [styles, setStyles] = useState('grid')
     const [filter, setFilter] = useState(false);

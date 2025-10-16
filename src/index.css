@@ -17,6 +17,16 @@
   --color-foreground-dark: #f9fafb; /* gray-50 */
 }
 
+/* navbutton */
+.navBtn{
+    @apply flex flex-col items-center gap-1 p-2
+}
+.navBtn1{
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-[14px] font-medium
+}
+.socialBtn{
+    @apply text-gray-500 hover:text-sky-400 hover:bg-gray-200
+}
 /* colors */
 .primary_btn{
   @apply bg-[#149777]
@@ -26,6 +36,20 @@
 }
 .dark_highlight{
   @apply bg-[#1bc29a]
+}
+/* cart and wishlit icon */
+.cartBtn{
+    @apply p-1.5 rounded-full bg-gray-100 dark:bg-gray-800  hover:text-[#0d6b54] transition-all duration-300 cursor-pointer
+}
+.commonFlex{
+    @apply flex justify-center items-center
+}
+.ratingStyle{
+    @apply text-orange-500 flex justify-start items-start gap-1 text-lg cursor-pointer
+}
+/* Featured card btn */
+.fCBtn{
+    @apply w-8 h-8 bg-gray-200 text-gray-700 hover:bg-emerald-500 hover:text-white border border-gray-200 rounded-full flex items-center justify-center shadow cursor-pointer
 }
 
 /* banner */

@@ -1,7 +1,9 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css"; // স্ট্যান্ডার্ড স্টাইল ইমপোর্ট
 import { Link } from "react-router-dom";
-
+import { get_banners } from '../../store/Reducers/homeReducer.js'
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 const images = [
     "https://res.cloudinary.com/dpd5xwjqp/image/upload/v1759466127/for_babosa_kori_see5ea.jpg",
     "https://res.cloudinary.com/dpd5xwjqp/image/upload/v1759466127/for_babosa_kori_see5ea.jpg",
@@ -9,6 +11,8 @@ const images = [
 ];
 
 const Banner = () => {
+      const dispatch = useDispatch()
+    const { banners } = useSelector(state => state.home)
     const responsive = {
         superLargeDesktop: {
             breakpoint: { max: 4000, min: 3000 },
@@ -27,6 +31,9 @@ const Banner = () => {
             items: 1,
         },
     };
+       useEffect(() => {
+        dispatch(get_banners())
+    }, [dispatch])
 
     return (
         <div className="w-full md:mt-4 mb-2">
@@ -39,14 +46,14 @@ const Banner = () => {
                     responsive={responsive}
                     autoPlaySpeed={3000}
                     itemClass="relative"
-                    containerClass="carousel-container rounded-xl overflow-hidden"
+                    containerClass="carousel-container rounded overflow-hidden"
                     dotListClass="custom-dot-list flex justify-center mt-4"
-                    className="shadow-md rounded-lg md:h-[350px]"
+                    className="shadow-md rounded md:h-[350px]"
                 >
-                    {images.map((img, i) => (
-                        <Link key={i} to="/shop" className="block w-full">
+                    {banners.map((img, i) => (
+                        <Link key={i} to={`/product/details/${img?.link}`} className="block w-full">
                             <img
-                                src={img}
+                                src={img.banner}
                                 alt={`Banner image ${i + 1}`}
                                 className="w-full h-[250px] md:h-[350px] lg:h-[450px] object-cover"
                             />
