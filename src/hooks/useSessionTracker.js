@@ -1,7 +1,7 @@
 // src/hooks/useSessionTracker.js
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import api from '../api/api';
+import api from '../Api/api';
 
 export default function useSessionTracker() {
   const location = useLocation();

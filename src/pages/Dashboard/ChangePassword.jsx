@@ -5,7 +5,7 @@ import { changePassword, messageClear } from '../../store/Reducers/authReducer';
 import { useNavigate } from 'react-router-dom';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { FiCamera } from 'react-icons/fi';
-import api from '../../api/api'; // আপনার কেস-সেন্সিটিভ ফোল্ডার অনুযায়ী
+import api from '../../Api/api'; // আপনার কেস-সেন্সিটিভ ফোল্ডার অনুযায়ী
 
 const PROFILE_UPDATE_URL = '/customer/profile-update';
 const ME_URL = '/customer/me';

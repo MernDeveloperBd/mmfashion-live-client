@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaList, FaWhatsapp } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../api/api";
+import api from "../../Api/api";
 
 const Navbar = ({ categories }) => {
   const [categoryShow, setCategoryShow] = useState(false);
