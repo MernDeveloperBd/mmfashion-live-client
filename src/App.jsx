@@ -127,7 +127,7 @@ function App() {
             <Route path='my-orders' element={<Orders />} />
             <Route path='order/details/:orderId' element={<Order />} />
             <Route path='my-wishlist' element={<Wishlist />} />
-            <Route path='change-password' element={<ChangePassword />} />
+            <Route path='my-profile' element={<ChangePassword />} />
             <Route path='chat' element={<Chat />} />
             <Route path="/dashboard/referral" element={<Referral />} />
             <Route path='chat/:sellerId' element={<Chat />} />

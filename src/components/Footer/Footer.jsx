@@ -70,7 +70,7 @@ const Footer = () => {
                         <h2 className='font-bold text-lg mb-2'>Join with us</h2>
                         <span>Get email updates about our latest and shop special offers</span>
                         <div className='h-[40px] w-full bg-white border border-slate-300 relative rounded'>
-                            <input placeholder='Enter your mail' className='h-full bg-transparent w-full px-3 outline-0' type="text" />
+                            <input placeholder='Enter your mail' className='h-full bg-transparent w-full px-3 outline-0' type="text" id='subscribe' name='subscribe'/>
                             <button className='h-full absolute right-0 primary_btn text-white uppercase px-4 font-bold text-sm rounded-r'>Subscribe</button>
                         </div>
                         <ul className='flex justify-start items-center gap-3'>

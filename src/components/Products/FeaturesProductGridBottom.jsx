@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 
 // Safe fallbacks
@@ -32,9 +32,9 @@ const FeaturesProductGridBottom = ({ products = [] }) => {
     return out;
   };
 
-  const card1 = ensure(products.slice(10, 14), 4);
-  const card2 = ensure(products.slice(15, 29), 4);
-  const card3 = ensure(products.slice(19, 23), 4);
+  const card1 = ensure(products.slice(8, 12), 4);
+  const card2 = ensure(products.slice(4, 8), 4);
+  const card3 = ensure(products.slice(0, 4), 4);
 
   // Prevent error loop and always land on a safe data URI
   const handleImgError = (e) => {

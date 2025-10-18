@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {  get_products } from "../../store/Reducers/homeReducer";
 import FeaturesProductGrid from "../../components/Products/FeaturesProductGrid";
 import FeaturesProductGridBottom from "../../components/Products/FeaturesProductGridBottom";
+import PromotionalBanner from "../../components/PromotionalBanner";
 
 
 const Home = () => {
@@ -33,6 +34,9 @@ const Home = () => {
              {/* Features product */}
             <div className="py-[30px]">
                 <FeaturesProduct products={products}/>
+            </div>
+            <div className="py-[30px]">
+                <PromotionalBanner/>
             </div>
            <div className="py-[30px]">
                 <FeaturesProductGridBottom products={products}/>

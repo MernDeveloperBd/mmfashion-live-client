@@ -34,6 +34,8 @@ const Orders = () => {
       <div className='flex justify-between items-center'>
         <h2 className='text-xl font-semibold text-slate-600'>My Orders</h2>
         <select
+        id="order-status"
+  name="orderStatus"
           className='outline-none px-3 py-1 border rounded-md text-slate-600'
           value={state}
           onChange={(e) => setState(e.target.value)}

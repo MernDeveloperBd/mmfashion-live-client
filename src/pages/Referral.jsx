@@ -125,9 +125,11 @@ const Referral = () => {
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-5 space-y-6">
           {/* Referral link */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">Referral link</label>
+            <label htmlFor="referral-link" className="block text-sm font-medium text-slate-700">Referral link</label>
             <div className="relative">
               <input
+              id="referral-link"
+    name="referralLink"
                 readOnly
                 className="w-full px-3 py-2 pr-[92px] rounded-lg border border-slate-300 bg-slate-50 text-slate-800 font-mono text-sm tracking-tight truncate focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 value={referral?.link || ''}

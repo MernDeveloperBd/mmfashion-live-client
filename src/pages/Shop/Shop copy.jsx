@@ -523,7 +523,8 @@ const Shop = () => {
                 </p> */}
                   </div>
                   <div className="commonFlex gap-3">
-                    <select onChange={(e) => { setSortPrice(e.target.value); setPageNumber(1); }} value={sortPrice} className="p-1 border outline-0 text-slate-600 font-semibold" disabled={imgLoading}>
+                    <select onChange={(e) => { setSortPrice(e.target.value); setPageNumber(1); }} value={sortPrice} className="p-1 border outline-0 text-slate-600 font-semibold" disabled={imgLoading} id="sort-price"
+  name="sortPrice">
                       <option value="">Sort by</option>
                       <option value="low-to-high">Low to High Price</option>
                       <option value="high-to-low">High to Low Price</option>

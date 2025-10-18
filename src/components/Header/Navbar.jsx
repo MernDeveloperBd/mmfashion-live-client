@@ -192,11 +192,13 @@ const Navbar = ({ categories }) => {
             <div className="flex items-center bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded md:rounded-full shadow-sm overflow-hidden pr-2">
               {/* Category select */}
               <select
+                id="category"
+                name="category"
                 onChange={(e) => setSelCatId(e.target.value)}
                 value={selCatId}
                 className="px-3 py-2 bg-transparent outline-none text-sm text-gray-700 dark:text-gray-300 border-r border-gray-300 dark:border-gray-600 cursor-pointer"
               >
-                <option value="">Category</option>
+                <option value="" >Category</option>
                 {categories?.map((cat) => (
                   <option value={cat?._id} key={cat?._id}>{cat?.name}</option>
                 ))}
@@ -204,6 +206,8 @@ const Navbar = ({ categories }) => {
 
               {/* Sub select */}
               <select
+                id="sub_ategory"
+                name="sub_ategory"
                 onChange={(e) => setSelSubId(e.target.value)}
                 value={selSubId}
                 disabled={!selCatId}
@@ -217,6 +221,8 @@ const Navbar = ({ categories }) => {
 
               {/* Child select */}
               <select
+                id="child_category"
+                name="child_category"
                 onChange={(e) => setSelChildId(e.target.value)}
                 value={selChildId}
                 disabled={!selSubId}
@@ -230,6 +236,8 @@ const Navbar = ({ categories }) => {
 
               {/* Text input */}
               <input
+                id="search_field"
+                name="search_field"
                 onChange={(e) => setSearchValue(e.target.value)}
                 value={searchValue}
                 type="text"

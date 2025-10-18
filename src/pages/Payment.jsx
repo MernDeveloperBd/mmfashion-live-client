@@ -15,7 +15,7 @@ const Payment = () => {
   const { token } = useSelector((state) => state.auth) || {};
 
   // BKash states
-  const [bkashNumber, setBkashNumber] = useState("01700000000");
+  const [bkashNumber, setBkashNumber] = useState("01979123009");
   const [bkashForm, setBkashForm] = useState({ sender: "", trxId: "" });
   const [bkashLoading, setBkashLoading] = useState(false);
   const [bkashSubmitted, setBkashSubmitted] = useState(false);

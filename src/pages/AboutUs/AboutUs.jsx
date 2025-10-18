@@ -63,7 +63,7 @@ const AboutUs = () => {
       name: "Ayub Ali",
       rating: 5,
       comment: "কাস্টমার সার্ভিস অসাধারণ। প্রতিটি পণ্যে যত্নের ছাপ স্পষ্ট।",
-      image: "https://scontent.fjsr17-1.fna.fbcdn.net/v/t39.30808-6/480891681_522073967584461_5094177895453309352_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=cJRrLWv-iFkQ7kNvwEsEu9V&_nc_oc=AdlF_So0VgEDOAI9dhq9RkVpPASRrRNdSA8arOM_DWl1p4VTMPvRtLdaZMs63kHBnq0&_nc_zt=23&_nc_ht=scontent.fjsr17-1.fna&_nc_gid=gBUaV23lLa5aayn5nxFUKA&oh=00_AfaVBqttc4Miv2bkivdq-Z4KZK_EgZKaMfB0AJn1Z-THaQ&oe=68C305CD"
+      image: `${useravater}`
     }
   ];
 

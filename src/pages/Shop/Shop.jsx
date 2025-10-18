@@ -368,29 +368,7 @@ const Shop = () => {
           <div className="w-full flex flex-col md:flex-row gap-6 px-2">
             {/* Sidebar */}
             <div className={`w-full md:w-3/12 pr-8 transition-all duration-300 px-2 ${filter ? "block" : "hidden md:block"}`}>
-              
-              {/* NEW: Text Search (above Category) */}
-            {/*   <div className="mb-4">
-                <h2 className="text-2xl font-bold mb-3 text-slate-600">Search</h2>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search products by name..."
-                    className="w-full px-3 py-2 border border-slate-300 rounded outline-none focus:border-[#0d6b54] text-slate-700"
-                  />
-                  {searchTerm ? (
-                    <button
-                      onClick={() => setSearchTerm('')}
-                      className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded"
-                    >
-                      Clear
-                    </button>
-                  ) : null}
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">Type to search. Results update as you type.</p>
-              </div> */}
+
 
               {/* Category Filter header */}
               <div className="flex items-center justify-between">
@@ -406,6 +384,7 @@ const Shop = () => {
                   catList.map((c) => (
                     <div className='flex justify-start items-center gap-2 py-1' key={c._id || c.slug || c.name}>
                       <input
+                        name="category_shop"
                         type="checkbox"
                         id={`cat_${c._id}`}
                         checked={selectedCatId === c._id}
@@ -429,6 +408,7 @@ const Shop = () => {
                     subList.map((s) => (
                       <div className='flex justify-start items-center gap-2 py-1' key={s._id}>
                         <input
+                          name="subCategory_shop"
                           type="checkbox"
                           id={`sub_${s._id}`}
                           checked={selectedSubId === s._id}
@@ -550,37 +530,38 @@ const Shop = () => {
                   {/* Search by Image */}
                   <div className="flex items-center gap-1">
                     <div className="py-0">
-                    {!imagePreview ? (
-                      <label className="block border border-dashed border-slate-300 rounded p-1.5 text-center cursor-pointer hover:bg-slate-50" title="Search by image">
-                        <input type="file" accept="image/*" className="hidden" onChange={onImagePick} />
-                        <span className="text-2xl text-teal-600 "> <FaCamera /></span>
-                      </label>
-                    ) : (
-                      <div className="flex items-center gap-3">
-                        <img src={imagePreview} alt="query" className="w-12 h-12 object-cover rounded border" />
-                        <button onClick={clearImage} className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">
-                          Clear
-                        </button>
-                      </div>
-                    )}
-                    {imgError ? <p className="text-xs text-red-500 mt-2">{imgError}</p> : null}
-                    {imgLoading ? <p className="text-xs text-slate-500 mt-2">Searching...</p> : null}
-                  </div>
-                  <div className="commonFlex gap-3">
-                    <select onChange={(e) => { setSortPrice(e.target.value); setPageNumber(1); }} value={sortPrice} className="p-1 border outline-0 text-slate-600 font-semibold" disabled={imgLoading}>
-                      <option value="">Sort by</option>
-                      <option value="low-to-high">Low to High Price</option>
-                      <option value="high-to-low">High to Low Price</option>
-                    </select>
-                    <div className="flex justify-center items-start gap-1 md:gap-4">
-                      <div onClick={() => setStyles('grid')} className={`p-2 ${styles === 'grid' && 'bg-slate-300'} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
-                        <BsFillGridFill />
-                      </div>
-                      <div onClick={() => setStyles('list')} className={`p-2 ${styles === 'list' && 'bg-slate-300'} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
-                        <BsList />
+                      {!imagePreview ? (
+                        <label className="block border border-dashed border-slate-300 rounded p-1.5 text-center cursor-pointer hover:bg-slate-50" title="Search by image">
+                          <input type="file" accept="image/*" className="hidden" onChange={onImagePick} />
+                          <span className="text-2xl text-teal-600 "> <FaCamera /></span>
+                        </label>
+                      ) : (
+                        <div className="flex items-center gap-3">
+                          <img src={imagePreview} alt="query" className="w-12 h-12 object-cover rounded border" />
+                          <button onClick={clearImage} className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">
+                            Clear
+                          </button>
+                        </div>
+                      )}
+                      {imgError ? <p className="text-xs text-red-500 mt-2">{imgError}</p> : null}
+                      {imgLoading ? <p className="text-xs text-slate-500 mt-2">Searching...</p> : null}
+                    </div>
+                    <div className="commonFlex gap-3">
+                      <select onChange={(e) => { setSortPrice(e.target.value); setPageNumber(1); }} value={sortPrice} className="p-1 border outline-0 text-slate-600 font-semibold" disabled={imgLoading} id="sort-price"
+                        name="sortPrice">
+                        <option value="">Sort by</option>
+                        <option value="low-to-high">Low to High Price</option>
+                        <option value="high-to-low">High to Low Price</option>
+                      </select>
+                      <div className="flex justify-center items-start gap-1 md:gap-4">
+                        <div onClick={() => setStyles('grid')} className={`p-2 ${styles === 'grid' && 'bg-slate-300'} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
+                          <BsFillGridFill />
+                        </div>
+                        <div onClick={() => setStyles('list')} className={`p-2 ${styles === 'list' && 'bg-slate-300'} text-slate-600 hover:bg-slate-300 cursor-pointer rounded-sm`}>
+                          <BsList />
+                        </div>
                       </div>
                     </div>
-                  </div>
                   </div>
                 </div>
 

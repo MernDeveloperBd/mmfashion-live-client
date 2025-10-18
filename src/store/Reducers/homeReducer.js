@@ -7,7 +7,7 @@ export const get_category = createAsyncThunk(
     try {
       const { data } = await api.get('/home/get-categories');
       return fulfillWithValue(data);
-    } catch (error) {
+    } catch (error) {      
       return rejectWithValue(error.response?.data || error.response);
     }
   }

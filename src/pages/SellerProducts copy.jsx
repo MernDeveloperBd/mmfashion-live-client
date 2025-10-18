@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -227,7 +228,7 @@ const SellerProducts = () => {
                           <InfoRow icon={<FiMapPin />} label="District" value={shop.district} />
                           <InfoRow icon={<FiMapPin />} label="Area" value={shop.subDistrict} />
                           <InfoRow icon={<FiPhone />} label="WhatsApp" value={shop.whatsapp} />
-                          {/* <InfoRow icon={<FiMapPin />} label="Address" value={shop.address} wrap /> */}
+                          <InfoRow icon={<FiMapPin />} label="Address" value={shop.address} wrap />
                         </div>
 
                         {shop.businessPage ? (

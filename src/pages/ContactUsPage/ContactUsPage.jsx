@@ -59,18 +59,18 @@ export default function ContactUsPage() {
 
   const validate = () => {
     const e = {};
-    if (!formData.name.trim()) e.name = "নাম লিখুন";
-    else if (formData.name.trim().length < 2) e.name = "সঠিক নাম লিখুন";
+    if (!formData.name.trim()) e.name = "Please enter your name";
+    else if (formData.name.trim().length < 2) e.name = "Please enter correct name";
 
-    if (!formData.email.trim()) e.email = "ইমেইল দিন";
-    else if (!isValidEmail(formData.email)) e.email = "বৈধ ইমেইল দিন";
+    if (!formData.email.trim()) e.email = "Please enter your email";
+    else if (!isValidEmail(formData.email)) e.email = "Please enter your valid email";
 
-    if (!formData.mobile.trim()) e.mobile = "মোবাইল নম্বর দিন";
+    if (!formData.mobile.trim()) e.mobile = "Please enter your mobile number";
     else if (!isValidBDMobile(formData.mobile))
-      e.mobile = "বাংলাদেশের মোবাইল (যেমন 01XXXXXXXXX) দিন";
+      e.mobile = "Bangladeshe mobile (exp: 01xxxxxxxxx)";
 
     if (!formData.message.trim() || formData.message.trim().length < 8)
-      e.message = "সংক্ষিপ্তভাবে পর্যাপ্ত বার্তা দিন (কমপক্ষে 8 অক্ষর)";
+      e.message = "Please provide a concise message (at least 8 characters)";
 
     if (formData.website && formData.website.trim().length > 0) {
       e.website = "spam";
@@ -89,9 +89,9 @@ export default function ContactUsPage() {
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(contactEmail);
-      toast.success("ইমেইল কপি করা হয়েছে");
+      toast.success("Email copied.");
     } catch {
-      toast.error("কপি করা যায়নি");
+      toast.error("Unable to copy email.");
     }
   };
 
@@ -141,7 +141,6 @@ export default function ContactUsPage() {
         return;
       }
       setErrors(v);
-      toast.error("ফর্মে কিছু ভুল আছে — অনুগ্রহ করে ঠিক করে পাঠান");
       return;
     }
 
@@ -355,9 +354,12 @@ export default function ContactUsPage() {
                 />
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Your Name</label>
+                  <label htmlFor="name" className="block text-sm font-medium text-slate-700">Your Name</label>
                   <input
+                  type="text"
                     name="name"
+                    id="name"
+                    autoComplete="name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your Name"
@@ -371,10 +373,12 @@ export default function ContactUsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Email</label>
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-700">Email</label>
                   <input
                     name="email"
+                    id="email"
                     type="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
@@ -388,9 +392,10 @@ export default function ContactUsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Mobile Number</label>
+                  <label htmlFor="mobile" className="block text-sm font-medium text-slate-700">Mobile Number</label>
                   <input
                     name="mobile"
+                    id="mobile"
                     value={formData.mobile}
                     onChange={handleChange}
                     placeholder="017XXXXXXXX"
@@ -404,9 +409,10 @@ export default function ContactUsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700">Message</label>
+                  <label htmlFor="message" className="block text-sm font-medium text-slate-700">Message</label>
                   <textarea
                     name="message"
+                    id="message"
                     rows="4"
                     value={formData.message}
                     onChange={handleChange}
@@ -424,11 +430,11 @@ export default function ContactUsPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium disabled:opacity-60"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium disabled:opacity-60 cursor-pointer"
                     aria-label="Send message"
                   >
                     {loading ? <FaSpinner className="animate-spin" /> : <FaPaperPlane />}
-                    <span>{loading ? "পাঠানো হচ্ছে..." : "Send Message"}</span>
+                    <span>{loading ? "Sending..." : "Send Message"}</span>
                   </button>
 
                   <button
@@ -437,7 +443,7 @@ export default function ContactUsPage() {
                       setFormData({ name: "", email: "", mobile: "", message: "", website: "" });
                       setErrors({});
                     }}
-                    className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200"
+                    className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 cursor-pointer"
                   >
                     Reset
                   </button>
@@ -500,22 +506,22 @@ export default function ContactUsPage() {
             <div className="text-sm text-slate-600 space-y-3">
               <div>
                 <p className="font-medium text-slate-800">
-                  অর্ডারের স্ট্যাটাস জানতে কিভাবে?
+                  How to check your order status?
                 </p>
                 <p>
-                  কনফার্মেশনের ইমেইল/এসএমএসে ট্র্যাকিং থাকে। প্রয়োজনে WhatsApp/ফর্মে মেসেজ দিন।
-                </p>
-              </div>
-              <div>
-                <p className="font-medium text-slate-800">রিটার্ন নীতি?</p>
-                <p>
-                  Damaged বা mismatch হলে ৭ দিনের মধ্যে রিটার্ন গ্রহণযোগ্য — ডিটেইলস পেজে দেখুন।
+                  Tracking details are included in your confirmation email/SMS. Need help? Send us a message on WhatsApp or through the form.
                 </p>
               </div>
               <div>
-                <p className="font-medium text-slate-800">কাস্টম ডিজাইন?</p>
+                <p className="font-medium text-slate-800">Return policy:</p>
                 <p>
-                  বার্তায় প্রয়োজন জানালেই আমরা কাস্টম অর্ডার রিভিউ করি। কিছু আইটেমে সীমাবদ্ধতা আছে।
+                  Returns are accepted within 7 days for damaged or mismatched items. See the product details page for the full policy.
+                </p>
+              </div>
+              <div>
+                <p className="font-medium text-slate-800">Custom design:</p>
+                <p>
+                  We accept custom orders on a case-by-case basis. Share your requirements; some items may not be eligible.
                 </p>
               </div>
             </div>
@@ -524,7 +530,7 @@ export default function ContactUsPage() {
           <div className="bg-white rounded-2xl p-5 border shadow-sm">
             <h4 className="font-semibold text-slate-800 mb-2">Business Hours</h4>
             <div className="text-sm text-slate-600 space-y-2">
-              <p>Sat–Thu: 10:00am – 7:00pm</p>
+              <p>Sat–Thu: 10:00am – 10:00pm</p>
               <p>Friday: Closed (12 PM to 3 PM)</p>
               <p className="text-xs text-slate-500">
                 Note: Online queries are answered even off-hours if available.

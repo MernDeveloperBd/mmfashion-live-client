@@ -18,11 +18,11 @@ import { price_range_product, query_products } from "../../store/Reducers/homeRe
 
 const SearchProducts = () => {
     let [searchParams, setSearchParams] = useSearchParams()
-    const category = searchParams.get('category')   
-    const searchValue = searchParams.get('value')   
+    const category = searchParams.get('category')
+    const searchValue = searchParams.get('value')
     const dispatch = useDispatch()
     const { products, totalProduct, latest_product, priceRange, perPage } = useSelector(state => state.home)
- 
+
     const [pageNumber, setPageNumber] = useState(1)
     const [styles, setStyles] = useState('grid')
     const [filter, setFilter] = useState(false);
@@ -107,7 +107,7 @@ const SearchProducts = () => {
                                 }`}
                         >
                             {/* Category Filter */}
-                          {/*   <h2 className="text-2xl font-bold mb-3 text-slate-600">
+                            {/*   <h2 className="text-2xl font-bold mb-3 text-slate-600">
                                 Category
                             </h2>
                             <div className="py-2">
@@ -223,7 +223,8 @@ const SearchProducts = () => {
                                 <div className="py-2 bg-white mb-10 px-3 rounded-md flex justify-between items-start border border-slate-200">
                                     <h2 className="text-lg font-medium text-slate-600">{products?.length} of total {totalProduct} Products</h2>
                                     <div className="flex justify-center items-center gap-3">
-                                        <select onChange={(e) => setSortPrice(e.target.value)} className="p-1 border outline-0 text-slate-600 font-semibold" name="" id="">
+                                        <select onChange={(e) => setSortPrice(e.target.value)} className="p-1 border outline-0 text-slate-600 font-semibold" id="sort-price"
+                                            name="sortPrice">
                                             <option value="">Sort by</option>
                                             <option value="low-to-high">Low to High Price</option>
                                             <option value="high-to-low">High to Low Price</option>
@@ -241,14 +242,14 @@ const SearchProducts = () => {
                                 </div>
                                 {/* products here */}
                                 <div className="pb-8">
-                                    <ShopProducts styles={styles} products={products}/>
+                                    <ShopProducts styles={styles} products={products} />
                                 </div>
                                 {
                                     totalProduct > perPage && <div>
-                                    <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={totalProduct} perPage={perPage} showItem={Math.floor(totalProduct / perPage)} />
-                                </div>
+                                        <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} totalItem={totalProduct} perPage={perPage} showItem={Math.floor(totalProduct / perPage)} />
+                                    </div>
                                 }
-                                
+
 
                             </div>
 

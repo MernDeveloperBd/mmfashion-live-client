@@ -145,14 +145,14 @@ const Dashboard = () => {
 
               <li>
                 <NavLink
-                  to="/dashboard/change-password"
+                  to="/dashboard/my-profile"
                   className={({ isActive }) =>
                     `${linkBase} ${isActive ? activeClass : ""}`
                   }
                   onClick={() => setOpen(false)}
                 >
                   <TfiLock className="text-xl" />
-                  <span>Change Password</span>
+                  <span> My Profile</span>
                 </NavLink>
               </li>
 
