@@ -45,7 +45,7 @@ const WelcomeGate = () => {
 
   const sessionKey = 'introModalShown';          // প্রতি সেশনে একবার
   const snoozeKey = 'introModalSnoozeUntil';     // ৭ দিনের জন্য হাইড
-  const SNOOZE_DAYS = 5;
+  const SNOOZE_DAYS = 7;
 
   useEffect(() => {
     // 1) ৭ দিনের স্নুজ চেক
@@ -71,7 +71,8 @@ const WelcomeGate = () => {
   const handleResell = () => {
     setOpen(false);
     // আপনার রিসেলিং রুট থাকলে সেটা দিন
-    navigate('http://localhost:5174/login');
+    // navigate('http://localhost:5174/login');
+    navigate(import.meta.env.ADMIN_URL);
   };
 
   const handleShop = () => {
