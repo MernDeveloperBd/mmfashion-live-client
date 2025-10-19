@@ -9,7 +9,7 @@ import { base_url } from '../../utils/config'
 
 // import { stripe_sky } from '../utils/config'
 // import { api_url } from '../utils/config'
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_SKY)
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_SKY);
 console.log("form stripe page client",stripePromise, import.meta.env.VITE_STRIPE_SKY);
 
 
