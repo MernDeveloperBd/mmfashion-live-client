@@ -41,7 +41,7 @@ const Category = () => {
                     className="shadow-md rounded-lg" 
                 >
                     {categories.map((category, i) => (
-                        <Link key={i} to={`/products?category=${category?.name}`} className="block">
+                        <Link key={i} to={`/shop?category=${category?.name}`} className="block">
                             <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700 dark:bg-gray-800 cursor-pointer">
                                 <img
                                     src={category.image}
