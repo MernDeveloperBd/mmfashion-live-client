@@ -88,7 +88,7 @@ const Navbar = ({ categories }) => {
     if (selSubId) params.set("sub", getSubName(selCatId, selSubId));
     if (selChildId) params.set("child", getChildName(selSubId, selChildId));
     if (searchValue) params.set("value", searchValue);
-    navigate(`/products/search?${params.toString()}`);
+    navigate(`/shop/search?${params.toString()}`);
   };
 
   return (
@@ -123,7 +123,7 @@ const Navbar = ({ categories }) => {
                       >
                         <img src={cat?.image} alt={cat?.name} className="w-6 h-6 rounded" />
                         <Link
-                          to={`/products?category=${encodeURIComponent(cat?.name)}`}
+                          to={`/shop?category=${encodeURIComponent(cat?.name)}`}
                           onClick={() => setCategoryShow(false)}
                           className="flex-1"
                         >
@@ -148,7 +148,7 @@ const Navbar = ({ categories }) => {
                           onMouseEnter={() => { setHoverSubId(sub._id); loadChilds(sub._id); }}
                         >
                           <Link
-                            to={`/products?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(sub.name)}`}
+                            to={`/shop?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(sub.name)}`}
                             onClick={() => setCategoryShow(false)}
                           >
                             {sub.name}
@@ -171,7 +171,7 @@ const Navbar = ({ categories }) => {
                       (childMap[hoverSubId] || []).map(child => (
                         <li key={child._id} className="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                           <Link
-                            to={`/products?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(getSubName(hoverCatId, hoverSubId))}&child=${encodeURIComponent(child.name)}`}
+                            to={`/shop?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(getSubName(hoverCatId, hoverSubId))}&child=${encodeURIComponent(child.name)}`}
                             onClick={() => setCategoryShow(false)}
                           >
                             {child.name}
