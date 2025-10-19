@@ -511,8 +511,7 @@ const Details = () => {
 
             {/* availability + share */}
             <div className="flex gap-6">
-              <div className="w-[140px] text-slate-900 font-semibold flex flex-col gap-4">
-                 <p className='py-2'>FB page <Link to={product?.fbProductLink} target='_blank' className="text-sky-600 text-lg">{product?.shopName}</Link></p>
+              <div className="w-[140px] text-slate-900 font-semibold flex flex-col gap-4">                 
                 <span>Availability</span>
                 <span>Share on</span>
               </div>
@@ -525,7 +524,9 @@ const Details = () => {
                 </ul>
               </div>
             </div>
-
+              <div className='py-2'>
+                <p >FB page <Link to={product?.fbProductLink} target='_blank' className="text-sky-600 text-md font-bold">{product?.shopName}</Link></p>
+              </div>
             {/* action row */}
             <div className="flex flex-wrap gap-3">
               {stock > 0 && (<button onClick={buy} className="px-8 h-[48px] bg-amber-500 hover:bg-amber-600 text-white rounded-md shadow-sm cursor-pointer">Buy Now</button>)}
