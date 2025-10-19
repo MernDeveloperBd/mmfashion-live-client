@@ -42,7 +42,7 @@ const collectOptions = (input, acc = []) => {
     const s = v.trim();
     if (!s) return acc;
     if ((s.startsWith('[') && s.endsWith(']')) || s.startsWith('["') || s.startsWith("['")) {
-      try { collectOptions(JSON.parse(s), acc); return acc; } catch {}
+      try { collectOptions(JSON.parse(s), acc); return acc; } catch { }
     }
     if (s.includes(',')) {
       s.split(',').map(t => t.trim()).filter(Boolean).forEach(t => collectOptions(t, acc));
@@ -210,28 +210,28 @@ const Details = () => {
   const shortDescLines = descLines.slice(0, SHORT_LINES);
 
   // SEO meta (for Seo component)
-const ogImage = images[0] || FALLBACK_IMG;
-const metaDesc = useMemo(() => {
-const text = (descLines.join(' ') || product?.short_desc || product?.name || 'Product details').trim();
-return text.length > 160 ? text.slice(0, 157) + '…' : text;
-}, [descLines, product?.short_desc, product?.name]);
+  const ogImage = images[0] || FALLBACK_IMG;
+  const metaDesc = useMemo(() => {
+    const text = (descLines.join(' ') || product?.short_desc || product?.name || 'Product details').trim();
+    return text.length > 160 ? text.slice(0, 157) + '…' : text;
+  }, [descLines, product?.short_desc, product?.name]);
 
-const productSchema = useMemo(() => ({
-"@context": "https://schema.org",
-"@type": "Product",
-name: product?.name || 'Product',
-description: metaDesc,
-image: images.length ? images : [ogImage],
-sku: product?._id,
-...(product?.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
-offers: {
-"@type": "Offer",
-priceCurrency: "BDT",
-price: Number(product?.price || 0),
-availability: (Number(product?.stock || 0) > 0) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-url: (typeof window !== 'undefined' ? window.location.href : '')
-}
-}), [product?._id, product?.name, product?.brand, product?.price, product?.stock, metaDesc, images, ogImage]);
+  const productSchema = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product?.name || 'Product',
+    description: metaDesc,
+    image: images.length ? images : [ogImage],
+    sku: product?._id,
+    ...(product?.brand ? { brand: { "@type": "Brand", name: product.brand } } : {}),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "BDT",
+      price: Number(product?.price || 0),
+      availability: (Number(product?.stock || 0) > 0) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      url: (typeof window !== 'undefined' ? window.location.href : '')
+    }
+  }), [product?._id, product?.name, product?.brand, product?.price, product?.stock, metaDesc, images, ogImage]);
 
   // bottom carousel config
   const responsive = {
@@ -291,26 +291,25 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1.5 rounded-md text-sm border transition ${
-        active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
-      }`}
+      className={`px-3 py-1.5 rounded-md text-sm border transition ${active ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'
+        }`}
     >
       {children}
     </button>
   );
 
   // seo
-  
+
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Seo
-       title={product?.name || 'Product Details'}
-       description={metaDesc}
-       image={ogImage}
-       type="product"
-       schema={productSchema}
-     />
+        title={product?.name || 'Product Details'}
+        description={metaDesc}
+        image={ogImage}
+        type="product"
+        schema={productSchema}
+      />
       <Header />
 
       {/* Hero (dynamic background) */}
@@ -409,7 +408,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
                       title={isLast ? `View ${extraCount} more` : 'Preview'}
                       type="button"
                     >
-                      <img src={src} alt={`pv-${i}`} onError={(e)=> (e.currentTarget.src = FALLBACK_IMG)} className="w-full h-full object-cover" />
+                      <img src={src} alt={`pv-${i}`} onError={(e) => (e.currentTarget.src = FALLBACK_IMG)} className="w-full h-full object-cover" />
                       {isLast && (<div className="absolute inset-0 bg-black/50 text-white text-xs font-semibold grid place-items-center">+{extraCount}</div>)}
                     </button>
                   );
@@ -430,7 +429,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
               {discount !== 0 ? (
                 <>
                   <span className="text-slate-900">TK {product?.price}</span>
-                  {product?.oldPrice ? <span className="line-through text-rose-500 text-lg">TK {product.oldPrice}</span> : null}
+                  {product?.oldPrice > 0 ? <span className="line-through text-rose-500 text-lg">TK {product.oldPrice}</span> : null}
                   <span className="text-slate-700 text-base">(-{discount}%)</span>
                 </>
               ) : (<span className="text-slate-900">TK {product?.price}</span>)}
@@ -439,7 +438,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
             {userInfo?.role === 'seller' && product?.resellingPrice != null && (
               <div className="text-slate-600">Reselling Price: <span className="font-medium text-slate-800">TK {product.resellingPrice}</span></div>
             )}
-
+           
             {/* Variants */}
             {colorOptions.length > 0 && (
               <div className="flex flex-col gap-2">
@@ -456,7 +455,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
                 <span className="text-sm text-slate-700 font-medium ">Size</span>
                 <div className="flex flex-wrap gap-2">
                   {sizeOptions.map((s, idx) => (
-                    <Chip  key={`s-${idx}`} active={selectedSize === s} onClick={() => setSelectedSize(s)}>{s}</Chip>
+                    <Chip key={`s-${idx}`} active={selectedSize === s} onClick={() => setSelectedSize(s)}>{s}</Chip>
                   ))}
                 </div>
               </div>
@@ -513,6 +512,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
             {/* availability + share */}
             <div className="flex gap-6">
               <div className="w-[140px] text-slate-900 font-semibold flex flex-col gap-4">
+                 <p className='py-2'>FB page <Link to={product?.fbProductLink} target='_blank' className="text-sky-600 text-lg">{product?.shopName}</Link></p>
                 <span>Availability</span>
                 <span>Share on</span>
               </div>
@@ -544,7 +544,7 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
                 <button onClick={() => setTab('reviews')} className={`px-4 py-2 text-sm rounded-t-md ${tab === 'reviews' ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer'}`}>Reviews</button>
                 <button onClick={() => setTab('description')} className={`px-4 py-2 text-sm rounded-t-md ${tab === 'description' ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer'}`}>Description</button>
               </div>
-             
+
             </div>
             <div className="bg-white border border-slate-200 rounded-b-md rounded-tr-md p-4">
               {tab === 'reviews' ? (
@@ -563,49 +563,51 @@ url: (typeof window !== 'undefined' ? window.location.href : '')
                   ) : (
                     <p>No description</p>
                   )}
+                  <p className='text-sm mt-4 text-gray-600'>Note: The courier charge must be paid in advance. It is 80 Taka inside Dhaka and 140 Taka outside Dhaka. Thank you.</p>
                 </div>
+                
               )}
-               <p className='text-sm mt-4 text-gray-600'>Note: The courier charge must be paid in advance. It is 80 Taka inside Dhaka and 140 Taka outside Dhaka. Thank you.</p>
+              
             </div>
-            
+
           </div>
 
           {/* More from shop */}
           {/* More from shop */}
-<div className="md:col-span-1">
-  <div className="bg-white border border-slate-200 rounded-md overflow-hidden">
-    <div className="px-3 py-2 bg-slate-100 border-b border-slate-200 text-slate-700">
-      From <span className="font-semibold">{product?.shopName || 'Shop'}</span>
-    </div>
-    <div className="p-3 grid grid-cols-2 md:grid-cols-1 gap-3">
-      {(moreProducts || []).slice(0, 3).map((p, i) => (
-        <Link key={p?._id || i} to={`/product/details/${p?.slug || '#'}`} className="block">
-          <div className="relative">
-            <img className="w-full h-[160px] md:h-[140px] object-cover rounded-md border border-slate-200"
-              src={safeSrc(p?.images?.[0]) || FALLBACK_IMG}
-              alt={p?.name || 'product'}
-              onError={(e) => (e.currentTarget.src = FALLBACK_IMG)} />
-            {Number(p?.discount || 0) > 0 && (
-              <div className="absolute left-2 top-2 px-2 h-6 bg-rose-600 text-white text-[11px] rounded shadow flex items-center">{p.discount}%</div>
-            )}
+          <div className="md:col-span-1">
+            <div className="bg-white border border-slate-200 rounded-md overflow-hidden">
+              <div className="px-3 py-2 bg-slate-100 border-b border-slate-200 text-slate-700">
+                From <span className="font-semibold">{product?.shopName || 'Shop'}</span>
+              </div>
+              <div className="p-3 grid grid-cols-2 md:grid-cols-1 gap-3">
+                {(moreProducts || []).slice(0, 3).map((p, i) => (
+                  <Link key={p?._id || i} to={`/product/details/${p?.slug || '#'}`} className="block">
+                    <div className="relative">
+                      <img className="w-full h-[160px] md:h-[140px] object-cover rounded-md border border-slate-200"
+                        src={safeSrc(p?.images?.[0]) || FALLBACK_IMG}
+                        alt={p?.name || 'product'}
+                        onError={(e) => (e.currentTarget.src = FALLBACK_IMG)} />
+                      {Number(p?.discount || 0) > 0 && (
+                        <div className="absolute left-2 top-2 px-2 h-6 bg-rose-600 text-white text-[11px] rounded shadow flex items-center">{p.discount}%</div>
+                      )}
+                    </div>
+                    <h3 className="text-slate-800 text-sm mt-2 line-clamp-2 min-h-[36px]">{p?.name || 'Product'}</h3>
+                    <div className="text-slate-700 text-sm font-semibold mt-1">TK {p?.price ?? 0}</div>
+                  </Link>
+                ))}
+              </div>
+              {product?.sellerId && (
+                <div className="px-3 py-3 border-t border-slate-200 bg-slate-50">
+                  <Link
+                    to={`/shop/seller/${product.sellerId}`}
+                    className="w-full inline-flex items-center justify-center px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+                  >
+                    এই শপের সকল প্রডাক্ট
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-          <h3 className="text-slate-800 text-sm mt-2 line-clamp-2 min-h-[36px]">{p?.name || 'Product'}</h3>
-          <div className="text-slate-700 text-sm font-semibold mt-1">TK {p?.price ?? 0}</div>
-        </Link>
-      ))}
-    </div>
-  {product?.sellerId && (
-    <div className="px-3 py-3 border-t border-slate-200 bg-slate-50">
-       <Link
-         to={`/shop/seller/${product.sellerId}`}
-         className="w-full inline-flex items-center justify-center px-3 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
-       >
-         এই শপের সকল প্রডাক্ট
-       </Link>
-     </div>
-  )}
-  </div>
-</div>
         </div>
       </section>
 

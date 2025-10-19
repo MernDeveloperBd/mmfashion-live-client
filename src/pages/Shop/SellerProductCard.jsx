@@ -114,7 +114,7 @@ const SellerProductCard = ({ styles = "grid" , products}) => {
               <div className="mt-2 flex items-center gap-2">
               <span className="text-lg font-bold text-zinc-900">TK{product.price}</span>
               {
-                product?.oldPrice && <span className="text-sm font-medium text-red-400 line-through">{product?.oldPrice}</span>
+                product?.oldPrice > 0 && <span className="text-sm font-medium text-red-400 line-through">{product?.oldPrice}</span>
               }              
             </div>
             
