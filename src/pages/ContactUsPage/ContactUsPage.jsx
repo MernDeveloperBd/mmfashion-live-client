@@ -146,7 +146,7 @@ export default function ContactUsPage() {
 
     setLoading(true);
     try {
-      const apiBase = (import.meta.env.VITE_API_URL || "http://localhost:5000").trim();
+      const apiBase = (import.meta.env.VITE_SERVER_URL || "http://localhost:5000").trim();
       const endpoint = buildEndpoint(apiBase);
 
       const payload = {

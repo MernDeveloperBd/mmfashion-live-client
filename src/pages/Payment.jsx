@@ -216,7 +216,7 @@ const Payment = () => {
                   <div className="rounded-lg border border-slate-200 p-4 md:p-5 bg-white">
                     <p className="font-semibold text-slate-800 mb-3">Nogot</p>
                     <button className="px-5 py-2 rounded-md bg-orange-500 text-white font-semibold hover:bg-orange-600 transition">
-                      Pay Now
+                      Upcoming
                     </button>
                   </div>
                 )}
@@ -225,7 +225,7 @@ const Payment = () => {
                   <div className="rounded-lg border border-slate-200 p-4 md:p-5 bg-white">
                     <p className="font-semibold text-slate-800 mb-3">Roket</p>
                     <button className="px-5 py-2 rounded-md bg-orange-500 text-white font-semibold hover:bg-orange-600 transition">
-                      Pay Now
+                     Upcoming
                     </button>
                   </div>
                 )}
