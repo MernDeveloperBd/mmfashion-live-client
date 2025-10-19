@@ -206,7 +206,7 @@ const Login = () => {
                     className="text-emerald-600 hover:underline ml-1"
                     target="_blank"
                     rel="noreferrer"
-                    href="http://localhost:5174/login"
+                    href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}
                   >
                     Login to seller account
                   </a>

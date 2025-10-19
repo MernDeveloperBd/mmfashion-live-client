@@ -8,7 +8,9 @@ import CheckoutForm from '../CheckoutForm'
 
 // import { stripe_sky } from '../utils/config'
 // import { api_url } from '../utils/config'
-const stripePromise = loadStripe('pk_test_51Rl7FN6uWmc1ye7HzEdg0gw0h5dJJHTxIkfMqNpknJP0Q7XJMEdhoj8wF2X5jF7erH7pJXmF72PXWAaO6tFhfLmq006IxS4qMO')
+const stripePromise = loadStripe(import.meta.env.VITE_stripe_sky)
+console.log(stripePromise);
+
 
 
 const Stripe = ({ price, orderId }) => {
@@ -22,7 +24,7 @@ const Stripe = ({ price, orderId }) => {
     }
     const create_payment = async () => {
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/order/create-payment`, { price }, { withCredentials: true })
+            const { data } = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/order/create-payment`, { price }, { withCredentials: true })
             setClientSecret(data.clientSecret)
         } catch (error) {
             console.log(error.response.data)

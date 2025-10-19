@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../../Api/api";
 import { jwtDecode } from "jwt-decode";
-
+import axios from 'axios'
+import { base_url } from "../../utils/config";
 
     export const customer_register = createAsyncThunk(
   'auth/customer_register',
@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
     try {
       const ref = localStorage.getItem('ref');
       const payload = ref ? { ...info, referralCode: ref } : info;
-      const { data } = await api.post('/customer/customer-register', payload);
+      const { data } = await axios.post(`${base_url}/api/customer/customer-register`, payload);
       localStorage.setItem('customerToken', data?.token);
       // success হলে ref ক্লিয়ার করতে পারেন
       localStorage.removeItem('ref');
@@ -25,7 +25,7 @@ export const getReferralInfo = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('customerToken');
-      const { data } = await api.get('/customer/referral', {
+      const { data } = await axios.get(`${base_url}/api/customer/referral`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (data?.error) return rejectWithValue(data);
@@ -41,7 +41,7 @@ export const updateReferralAlias = createAsyncThunk(
   async (newCode, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('customerToken');
-      const { data } = await api.put('/customer/referral-code', { newCode }, {
+      const { data } = await axios.put(`${base_url}/api/customer/referral-code`, { newCode }, {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (data?.error) return rejectWithValue(data);
@@ -56,7 +56,7 @@ export const customer_login = createAsyncThunk(
     'auth/customer_login',
     async (info, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.post('/customer/customer-login', info)
+            const { data } = await axios.post(`${base_url}/api/customer/customer-login`, info)
             localStorage.setItem('customerToken', data.token)
             return fulfillWithValue(data)
         } catch (error) {
@@ -67,11 +67,10 @@ export const customer_login = createAsyncThunk(
 
 export const changePassword = createAsyncThunk(
   'auth/changePassword',
-  async ({ oldPassword, newPassword }, { rejectWithValue }) => {
+  async ({ oldPassword, newPassword }, {fulfillWithValue, rejectWithValue }) => {
     try {
       const token = localStorage.getItem('customerToken');
-      const { data } = await api.put(
-  '/customer/change-password',
+      const { data } = await axios.put(`${base_url}/api/customer/change-password`,
   { oldPassword, newPassword },
   {
     withCredentials: false, // cookie যাবে না
@@ -79,7 +78,7 @@ export const changePassword = createAsyncThunk(
   }
 );
       if (data?.error) return rejectWithValue(data);
-      return data;
+      return fulfillWithValue(data);
     } catch (err) {
       return rejectWithValue(err.response?.data || { error: 'Change failed' });
     }
@@ -89,7 +88,14 @@ export const changePassword = createAsyncThunk(
 const decodeToken = (token) => {
     if (token) {
         const userInfo = jwtDecode(token)
-        return userInfo
+          const expireTime = new Date(userInfo.exp * 1000);
+      if (new Date() > expireTime) {
+        localStorage.removeItem('accessToken');
+        return '';
+      } else {
+       return userInfo
+      }
+        
     } else {
         return ''
     }

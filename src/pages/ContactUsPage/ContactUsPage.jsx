@@ -122,7 +122,7 @@ export default function ContactUsPage() {
 
   // Build endpoint helper
   const buildEndpoint = (baseUrl) => {
-    const base = (baseUrl || "http://localhost:5000").replace(/\/+$/, "");
+    const base = (baseUrl || import.meta.env.VITE_SERVER_URL).replace(/\/+$/, "");
     const hasApi = /\/api(\/|$)/.test(base);
     return hasApi ? `${base}/contact` : `${base}/api/contact`;
   };

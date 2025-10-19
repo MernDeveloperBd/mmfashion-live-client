@@ -72,7 +72,7 @@ const WelcomeGate = () => {
     setOpen(false);
     // আপনার রিসেলিং রুট থাকলে সেটা দিন
     // navigate('http://localhost:5174/login');
-    navigate(import.meta.env.ADMIN_URL);
+    navigate(import.meta.env.VITE_DASHBOARD_URL);
   };
 
   const handleShop = () => {

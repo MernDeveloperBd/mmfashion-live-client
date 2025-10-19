@@ -7,10 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast'
 import io from 'socket.io-client'
 import { add_friend, send_message, updateMessage, messageClear } from '../../store/Reducers/chatReducer';
-const socket = io("http://localhost:5000")
 import { AiOutlineMessage, AiOutlinePlus } from 'react-icons/ai'
 import { useRef } from 'react';
 import userImage from '../../assets/seller.png'
+import { base_url } from '../../utils/config';
+const socket = io(base_url)
 
 const FALLBACK_AVATAR = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png?text=User';
 

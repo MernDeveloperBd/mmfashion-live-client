@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../Api/api";
+import axios from "axios";
+import { base_url } from "../../utils/config";
 
 /**
  * CUSTOMER SIDE
@@ -10,8 +12,8 @@ export const place_order = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const { data } = await api.post(
-        '/home/order/palce-order',
+      const { data } = await axios.post(
+        `${base_url}/api/home/order/palce-order`,
         { price, products, shipping_fee, shippingInfo, userId, items },
         config
       );
@@ -32,9 +34,15 @@ export const place_order = createAsyncThunk(
 
 export const get_orders = createAsyncThunk(
   'order/get_orders',
-  async ({ customerId, status }, { rejectWithValue, fulfillWithValue }) => {
+  async ({ customerId, status }, { rejectWithValue, fulfillWithValue ,getState}) => {
+    const token = getState().auth.token
+        const config = {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        }
     try {
-      const { data } = await api.get(`/home/customer/gat-orders/${customerId}/${status}`);
+      const { data } = await axios.get(`${base_url}/api/home/customer/gat-orders/${customerId}/${status}`,config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to load orders' });
@@ -44,9 +52,15 @@ export const get_orders = createAsyncThunk(
 
 export const get_order = createAsyncThunk(
   'order/get_order',
-  async (orderId, { rejectWithValue, fulfillWithValue }) => {
+  async (orderId, { rejectWithValue, fulfillWithValue,getState }) => {
+    const token = getState().auth.token
+        const config = {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        }
     try {
-      const { data } = await api.get(`/home/customer/gat-order/${orderId}`);
+      const { data } = await axios.get(`${base_url}/api/home/customer/gat-order/${orderId}`,config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to load order' });

@@ -7,7 +7,7 @@ import error from '../assets/error.png'
 import success from '../assets/success.png'
 
 const load = async () => {
-    return await loadStripe('pk_test_51Rl7FN6uWmc1ye7HzEdg0gw0h5dJJHTxIkfMqNpknJP0Q7XJMEdhoj8wF2X5jF7erH7pJXmF72PXWAaO6tFhfLmq006IxS4qMO')
+    return await loadStripe(import.meta.env.VITE_stripe_sky)
 }
 
 const ConfirmOrder = () => {
@@ -51,7 +51,7 @@ const ConfirmOrder = () => {
         const orderId = localStorage.getItem('orderId')
         if (orderId) {
             try {
-                await axios.get(`http://localhost:5000/api/order/confirm/${orderId}`)
+                await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/order/confirm/${orderId}`)
                 localStorage.removeItem('orderId')
                 setLoader(false)
             } catch (error) {

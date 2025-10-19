@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../../Api/api";
+import axios from "axios";
+import { base_url } from "../../utils/config";
 
 export const get_category = createAsyncThunk(
   'product/get_category',
   async (_, { fulfillWithValue, rejectWithValue }) => {
+    
     try {
-      const { data } = await api.get('/home/get-categories');
+      const { data } = await axios.get(`${base_url}/api/home/get-categories`);
       return fulfillWithValue(data);
     } catch (error) {      
       return rejectWithValue(error.response?.data || error.response);
@@ -17,7 +19,7 @@ export const get_products = createAsyncThunk(
   'product/get_products',
   async (_, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get('/home/get-products');
+      const { data } = await axios.get(`${base_url}/api/home/get-products`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response?.data || error.response);
@@ -29,7 +31,7 @@ export const get_product = createAsyncThunk(
   'product/get_product',
   async (slug, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get(`/home/get-product/${slug}`);
+      const { data } = await axios.get(`${base_url}/api/home/get-product/${slug}`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response?.data || error.response);
@@ -41,7 +43,7 @@ export const price_range_product = createAsyncThunk(
   'product/price_range_product',
   async (_, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get('/home/price-range-latest-product');
+      const { data } = await axios.get(`${base_url}/api/home/price-range-latest-product`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response?.data || error.response);
@@ -73,7 +75,7 @@ export const query_products = createAsyncThunk(
       if (subcategory) qs.set('subcategory', subcategory);
       if (child) qs.set('child', child);
 
-      const { data } = await api.get(`/product-get-all?${qs.toString()}`, { withCredentials: false });
+      const { data } = await axios.get(`${base_url}/api/product-get-all?${qs.toString()}`, { withCredentials: false });
       return data; // { products, totalProduct }
     } catch (err) {
       return rejectWithValue(err.response?.data || { error: err.message || 'Network error' });
@@ -83,9 +85,15 @@ export const query_products = createAsyncThunk(
 
 export const customer_review = createAsyncThunk(
   'review/customer_review',
-  async (info, { fulfillWithValue, rejectWithValue }) => {
+  async (info, { fulfillWithValue, rejectWithValue,getState }) => {
+     const token = getState().auth.token
+        const config = {
+            headers: {
+                'authorization': `Bearer ${token}`
+            }
+        }
     try {
-      const { data } = await api.post('/home/customer/submit-review', info);
+      const { data } = await axios.post(`${base_url}/api/home/customer/submit-review`, info,config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response?.data || error.response);
@@ -97,7 +105,7 @@ export const get_reviews = createAsyncThunk(
   'review/get_reviews',
   async ({ productId, pageNumber }, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get(`/home/customer/get-reviews/${productId}?pageNo=${pageNumber}`);
+      const { data } = await axios.get(`${base_url}/api/home/customer/get-reviews/${productId}?pageNo=${pageNumber}`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error.response?.data || error.response);
@@ -109,7 +117,7 @@ export const get_banner = createAsyncThunk(
   'banner/get_banner',
   async (productId, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get(`/banner/get/${productId}`);
+      const { data } = await axios.get(`${base_url}/api/banner/get/${productId}`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: error.message });
@@ -121,7 +129,7 @@ export const get_banners = createAsyncThunk(
   'banner/get_banners',
   async (_, { fulfillWithValue, rejectWithValue }) => {
     try {
-      const { data } = await api.get('/banner/get-all');
+      const { data } = await axios.get(`${base_url}/api/banner/get-all`);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: error.message });
