@@ -5,11 +5,12 @@ import { Elements } from '@stripe/react-stripe-js'
 import axios from 'axios'
 import { useState } from 'react'
 import CheckoutForm from '../CheckoutForm'
+import { base_url } from '../../utils/config'
 
 // import { stripe_sky } from '../utils/config'
 // import { api_url } from '../utils/config'
 const stripePromise = loadStripe(import.meta.env.VITE_stripe_sky)
-console.log(stripePromise);
+console.log("form stripe page client",stripePromise);
 
 
 
@@ -24,7 +25,7 @@ const Stripe = ({ price, orderId }) => {
     }
     const create_payment = async () => {
         try {
-            const { data } = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/order/create-payment`, { price }, { withCredentials: true })
+            const { data } = await axios.post(`${base_url}/api/order/create-payment`, { price }, { withCredentials: true })
             setClientSecret(data.clientSecret)
         } catch (error) {
             console.log(error.response.data)
