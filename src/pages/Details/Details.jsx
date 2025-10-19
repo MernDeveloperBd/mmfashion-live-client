@@ -505,7 +505,7 @@ const Details = () => {
                 </>
               )}
               <button onClick={add_wishlist} className="h-[48px] w-[48px] flex justify-center items-center bg-white border border-slate-200 rounded-md hover:bg-emerald-50 text-emerald-600 cursor-pointer" aria-label="Add to wishlist" title="Add to wishlist">
-                <AiFillHeart />
+                <AiFillHeart size={22}/>
               </button>
             </div>
 
@@ -525,7 +525,7 @@ const Details = () => {
               </div>
             </div>
               <div className='py-2'>
-                <p >FB page <Link to={product?.fbProductLink} target='_blank' className="text-sky-600 text-md font-bold">{product?.shopName}</Link></p>
+                <p >FB page: <Link to={product?.fbProductLink} target='_blank' className="text-sky-600 text-md font-bold"> {product?.shopName}</Link></p>
               </div>
             {/* action row */}
             <div className="flex flex-wrap gap-3">
@@ -564,7 +564,7 @@ const Details = () => {
                   ) : (
                     <p>No description</p>
                   )}
-                  <p className='text-sm mt-4 text-gray-600'>Note: The courier charge must be paid in advance. It is 80 Taka inside Dhaka and 140 Taka outside Dhaka. Thank you.</p>
+                  <p className='text-sm mt-4 text-gray-600'>Note: The courier charge must be paid in advance. It is <span className='font-bold'>80</span> Taka inside Dhaka and <span className='font-bold'>140 </span>Taka outside Dhaka. Thank you.</p>
                 </div>
                 
               )}

@@ -6,11 +6,11 @@ const BANNER_IMAGE = "https://res.cloudinary.com/dpd5xwjqp/image/upload/v1760552
 
 // দ্রুত অ্যাক্সেস আইটেম (সাইড মেনুর মতো)
 const quickLinks = [
-    { name: "Women Fashion", icon: "📱", path: "/products?category=Women%20Fashion" },
-    { name: "Men Fashion", icon: "👕", path: "/products?category=Men%20Fashion" },
-    { name: "Home Goods", icon: "🏡", path: "/products?category=Home%20Decore" },
-    { name: "Cosmetics", icon: "⚽", path: "/products?category=Cosmetics" },
-    { name: "Beauty & Health", icon: "💄", path: "/products?category=Cosmetics" },
+    { name: "Women Fashion", icon: "📱", path: "/shop?category=Women%20Fashion" },
+    { name: "Men Fashion", icon: "👕", path: "/shop?category=Men%20Fashion" },
+    { name: "Home Goods", icon: "🏡", path: "/shop?category=Home%20Decore" },
+    { name: "Cosmetics", icon: "⚽", path: "/shop?category=Cosmetics" },
+    { name: "Beauty & Health", icon: "💄", path: "/shop?category=Cosmetics" },
 ];
 
 
@@ -157,9 +157,9 @@ const PromotionalBanner = () => {
         <div className="main-banner-area">
             <div className="overlay"></div>
             <div className="banner-text">
-                <h1>Huge Winter Sale is Here!</h1>
+                <h1>Huge Opportunity in here For Reseller!</h1>
                 <p>Up to 40% OFF on top trending products. Limited stock available!</p>
-                <Link to="/shop/summer-deals" className="cta-button">
+                <Link to="/shop" className="cta-button">
                     Shop Now & Get Free Shipping
                 </Link>
             </div>
