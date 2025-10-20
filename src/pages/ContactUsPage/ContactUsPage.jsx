@@ -134,10 +134,9 @@ export default function ContactUsPage() {
 
     const v = validate();
     if (Object.keys(v).length > 0) {
+      // FIX: spam হলে success দেখিয়ে রিকোয়েস্ট স্কিপ করত — এখন ব্লক করবে
       if (v.website === "spam") {
-        setSentSuccess(true);
-        setFormData({ name: "", email: "", mobile: "", message: "", website: "" });
-        toast.success("Message sent successfully!");
+        toast.error("Spam detected. Please try again.");
         return;
       }
       setErrors(v);
@@ -330,7 +329,7 @@ export default function ContactUsPage() {
               </div>
 
               <p className="text-xs text-slate-500 mt-4">
-                সাধারণত উত্তর সময় ২৪–৪৮ ঘন্টা (ব্যবসায়িক দিন)। জরুরি প্রয়োজনে ফোন বা WhatsApp ব্যবহার করুন। {/* Fixed: Spacing in Bengali */}
+                সাধারণত উত্তর সময় ২৪–৪৮ ঘন্টা (ব্যবসায়িক দিন)। জরুরি প্রয়োজনে ফোন বা WhatsApp ব্যবহার করুন।
               </p>
             </div>
           </div>
@@ -345,18 +344,16 @@ export default function ContactUsPage() {
               >
                 {/* hidden honeypot */}
                 <input
-                  type="text"
+                  type="hidden"
                   name="website"
                   value={formData.website}
                   onChange={handleChange}
                   autoComplete="off"
-                  tabIndex="-1"
-                  className="absolute left-[-9999px] opacity-0 h-0 w-0"
                 />
 
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-                    Your Name <span className="text-rose-500">*</span> {/* Added required indicator */}
+                    Your Name <span className="text-rose-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -407,7 +404,7 @@ export default function ContactUsPage() {
                   <input
                     name="mobile"
                     id="mobile"
-                    type="tel" // Fixed: Better semantic type
+                    type="tel"
                     value={formData.mobile}
                     onChange={handleChange}
                     placeholder="017XXXXXXXX"

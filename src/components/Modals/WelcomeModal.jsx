@@ -2,21 +2,17 @@ import { useEffect, useRef } from "react";
 import { IoCloseSharp } from "react-icons/io5";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 
-const WelcomeModal = ({
-  open,
-  onClose,
-  onResell,
-  onShop
-}) => {
+const WelcomeModal = ({ open, onClose, onResell, onShop }) => {
   const primaryBtnRef = useRef(null);
+  const modalRef = useRef(null);
 
   // Body scroll lock
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevOverflow;
     };
   }, [open]);
 
@@ -35,23 +31,63 @@ const WelcomeModal = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  // Focus trap (keep focus inside modal)
+  useEffect(() => {
+    if (!open) return;
+    const container = modalRef.current;
+    if (!container) return;
+
+    const selectors =
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+    const getFocusable = () =>
+      Array.from(container.querySelectorAll(selectors)).filter(
+        (el) => !el.hasAttribute("disabled") && el.getAttribute("aria-hidden") !== "true"
+      );
+
+    const handleKeyDown = (e) => {
+      if (e.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) {
+        e.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    container.addEventListener("keydown", handleKeyDown);
+    return () => container.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   if (!open) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 "
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="welcome-modal-title"
       aria-describedby="welcome-modal-desc"
       onClick={(e) => {
-        // overlay click to close
         if (e.target === e.currentTarget) onClose?.();
       }}
     >
       <div
-        className="relative w-full max-w-xl bg-white rounded-xl shadow-2xl ring-1 ring-black/5 transition-all"
-        onClick={(e) => e.stopPropagation()} // prevent bubbling to overlay
+        ref={modalRef}
+        className="relative w-full max-w-xl bg-white rounded-xl shadow-2xl ring-1 ring-black/5 transition-all duration-200 focus:outline-none"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Top accent line */}
         <div className="absolute inset-x-0 -top-[1px] h-[3px] bg-gradient-to-r from-teal-500 via-emerald-500 to-teal-500 rounded-t-xl" />
@@ -63,10 +99,12 @@ const WelcomeModal = ({
           </h3>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 cursor-pointer"
-            aria-label="Close"
+            className="p-1.5 rounded-md hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 cursor-pointer"
+            aria-label="Close dialog"
+            title="Close"
           >
             <IoCloseSharp size={22} />
+            <span className="sr-only">Close</span>
           </button>
         </div>
 
@@ -78,7 +116,7 @@ const WelcomeModal = ({
 
           <ul className="space-y-3">
             <li className="flex items-start gap-2">
-              <span className="mt-0.5 text-emerald-600">
+              <span className="mt-0.5 text-emerald-600" aria-hidden="true">
                 <AiOutlineCheckCircle size={18} />
               </span>
               <p className="text-[15.5px]">
@@ -86,7 +124,7 @@ const WelcomeModal = ({
               </p>
             </li>
             <li className="flex items-start gap-2">
-              <span className="mt-0.5 text-emerald-600 cursor-pointer">
+              <span className="mt-0.5 text-emerald-600" aria-hidden="true">
                 <AiOutlineCheckCircle size={18} />
               </span>
               <p className="text-[15.5px]">
@@ -96,7 +134,7 @@ const WelcomeModal = ({
           </ul>
 
           <div className="mt-5 p-3.5 bg-slate-50 rounded-md border border-slate-200 text-[14px] text-slate-600">
-            আরও জানতে MM Fashion World এর সাপোরটে যোগাযোগ করুন।
+            আরও জানতে MM Fashion World এর সাপোর্টে যোগাযোগ করুন।
           </div>
         </div>
 
@@ -116,8 +154,6 @@ const WelcomeModal = ({
           >
             এখনই কেনাকাটা করুন
           </button>
-
-          
         </div>
       </div>
     </div>

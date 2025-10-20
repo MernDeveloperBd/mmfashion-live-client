@@ -4,8 +4,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../Api/api";
 
-const toKey = (x) => (x !== undefined && x !== null ? String(x) : "");
-
 const Navbar = ({ categories }) => {
   const [categoryShow, setCategoryShow] = useState(false);
 
@@ -14,8 +12,8 @@ const Navbar = ({ categories }) => {
   const [hoverSubId, setHoverSubId] = useState("");
 
   // Cache maps
-  const [subMap, setSubMap] = useState({});     // { [catId: string]: subCategories[] }
-  const [childMap, setChildMap] = useState({}); // { [subId: string]: childCategories[] }
+  const [subMap, setSubMap] = useState({});     // { [catId]: subCategories[] }
+  const [childMap, setChildMap] = useState({}); // { [subId]: childCategories[] }
   const [loadingSub, setLoadingSub] = useState(false);
   const [loadingChild, setLoadingChild] = useState(false);
 
@@ -46,32 +44,28 @@ const Navbar = ({ categories }) => {
   }, [categoryShow]);
 
   // Load sub-categories for a category
-  const loadSubs = async (catIdRaw) => {
-    const catId = toKey(catIdRaw);
+  const loadSubs = async (catId) => {
     if (!catId || subMap[catId]) return;
     try {
       setLoadingSub(true);
-      const { data } = await api.get(`/sub-category-get?categoryId=${encodeURIComponent(catId)}`, { withCredentials: true });
-      const list = data?.subCategories || data?.subCategory || data?.data || [];
-      setSubMap((prev) => ({ ...prev, [catId]: list }));
+      const { data } = await api.get(`/sub-category-get?categoryId=${catId}`, { withCredentials: true });
+      setSubMap((prev) => ({ ...prev, [catId]: data?.subCategories || [] }));
     } catch (e) {
-      // optionally console.error(e);
+      // fail silently
     } finally {
       setLoadingSub(false);
     }
   };
 
   // Load child-categories for a sub-category
-  const loadChilds = async (subIdRaw) => {
-    const subId = toKey(subIdRaw);
+  const loadChilds = async (subId) => {
     if (!subId || childMap[subId]) return;
     try {
       setLoadingChild(true);
-      const { data } = await api.get(`/child-category-get?subcategoryId=${encodeURIComponent(subId)}`, { withCredentials: true });
-      const list = data?.childCategories || data?.childCategory || data?.data || [];
-      setChildMap((prev) => ({ ...prev, [subId]: list }));
+      const { data } = await api.get(`/child-category-get?subcategoryId=${subId}`, { withCredentials: true });
+      setChildMap((prev) => ({ ...prev, [subId]: data?.childCategories || [] }));
     } catch (e) {
-      // optionally console.error(e);
+      // fail silently
     } finally {
       setLoadingChild(false);
     }
@@ -90,28 +84,29 @@ const Navbar = ({ categories }) => {
     if (selSubId) loadChilds(selSubId);
   }, [selSubId]);
 
-  const getCatName = (id) =>
-    categories?.find((c) => toKey(c._id) === toKey(id))?.name || "";
+  const getCatName = (id) => categories?.find((c) => c._id === id)?.name || "";
+  const getSubName = (catId, subId) => (subMap[catId] || []).find((s) => s._id === subId)?.name || "";
+  const getChildName = (subId, childId) => (childMap[subId] || []).find((c) => c._id === childId)?.name || "";
 
-  const getSubName = (catId, subId) =>
-    (subMap[toKey(catId)] || []).find((s) => toKey(s._id) === toKey(subId))?.name || "";
+const handleSearch = (e) => {
+  if (e) e.preventDefault();
+  const params = new URLSearchParams();
 
-  const getChildName = (subId, childId) =>
-    (childMap[toKey(subId)] || []).find((c) => toKey(c._id) === toKey(childId))?.name || "";
+  if (selCatId) params.set("category", getCatName(selCatId));
+  if (selSubId) params.set("sub", getSubName(selCatId, selSubId));
+  if (selChildId) params.set("child", getChildName(selSubId, selChildId));
 
-  const handleSearch = (e) => {
-    if (e) e.preventDefault();
-    const params = new URLSearchParams();
-    if (selCatId) params.set("category", getCatName(selCatId));
-    if (selSubId) params.set("sub", getSubName(selCatId, selSubId));
-    if (selChildId) params.set("child", getChildName(selSubId, selChildId));
-    const v = searchValue.trim();
-    if (v) params.set("value", v);
+  const v = searchValue.trim();
+  if (v) {
+    params.set("q", v);       // common
+    params.set("search", v);  // fallback
+    params.set("value", v);   // previous
+  }
 
-    const qs = params.toString();
-    navigate(`/shop${qs ? `?${qs}` : ""}`);
-    setCategoryShow(false);
-  };
+  const qs = params.toString();
+  navigate(`/shop${qs ? `?${qs}` : ""}`);
+  setCategoryShow(false);
+};
 
   return (
     <div className="w-full bg-gray-50 dark:bg-gray-800 py-1.5">
@@ -128,63 +123,87 @@ const Navbar = ({ categories }) => {
                 <FaList size={18} />
                 <span>All Category</span>
               </div>
-              <IoIosArrowDown className={`transition-transform duration-300 ${categoryShow ? "rotate-180" : ""}`} />
+              <IoIosArrowDown
+                className={`transition-transform duration-300 ${categoryShow ? "rotate-180" : ""}`}
+              />
             </button>
 
             {/* Mega Dropdown */}
-            <div className={`absolute top-full left-0 w-full md:w-[720px] mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-200 ${categoryShow ? "opacity-100 visible" : "opacity-0 invisible"}`}>
+            <div
+              className={`absolute top-full left-0 w-full md:w-[720px] mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-200 ${
+                categoryShow ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+            >
               <div className="grid grid-cols-1 md:grid-cols-3">
                 {/* Column 1: Categories */}
                 <div className="max-h-[320px] overflow-auto border-r dark:border-gray-600">
                   <ul className="py-2">
-                    {categories?.map((cat) => {
-                      const id = toKey(cat?._id);
-                      return (
-                        <li
-                          key={id}
-                          className={`flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer ${hoverCatId === id ? "bg-gray-100 dark:bg-gray-600" : ""}`}
-                          onMouseEnter={() => { setHoverCatId(id); setHoverSubId(""); loadSubs(id); }}
-                          onClick={() => { setHoverCatId(id); setHoverSubId(""); loadSubs(id); }}
+                    {categories?.map((cat) => (
+                      <li
+                        key={cat._id}
+                        className={`flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer ${
+                          hoverCatId === cat._id ? "bg-gray-100 dark:bg-gray-600" : ""
+                        }`}
+                        onMouseEnter={() => {
+                          setHoverCatId(cat._id);
+                          setHoverSubId("");
+                          loadSubs(cat._id);
+                        }}
+                        onClick={() => {
+                          // mobile/touch fallback
+                          setHoverCatId(cat._id);
+                          setHoverSubId("");
+                          loadSubs(cat._id);
+                        }}
+                      >
+                        <img src={cat?.image} alt={cat?.name} className="w-6 h-6 rounded" />
+                        <Link
+                          to={`/shop?category=${encodeURIComponent(cat?.name)}`}
+                          onClick={() => setCategoryShow(false)}
+                          className="flex-1"
                         >
-                          <img src={cat?.image} alt={cat?.name} className="w-6 h-6 rounded" />
-                          <Link
-                            to={`/shop?category=${encodeURIComponent(cat?.name)}`}
-                            onClick={() => setCategoryShow(false)}
-                            className="flex-1"
-                          >
-                            {cat?.name}
-                          </Link>
-                        </li>
-                      );
-                    })}
+                          {cat?.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
                 {/* Column 2: Sub Categories */}
                 <div className="max-h-[320px] overflow-auto border-r dark:border-gray-600">
-                  <h4 className="px-4 pt-3 text-xs uppercase tracking-wider text-gray-500">Sub Categories</h4>
+                  <h4 className="px-4 pt-3 text-xs uppercase tracking-wider text-gray-500">
+                    Sub Categories
+                  </h4>
                   <ul className="py-2">
                     {loadingSub && !subMap[hoverCatId] ? (
                       <li className="px-4 py-2 text-sm text-gray-400">Loading...</li>
                     ) : (subMap[hoverCatId] || []).length ? (
-                      (subMap[hoverCatId] || []).map((sub) => {
-                        const sid = toKey(sub._id);
-                        return (
-                          <li
-                            key={sid}
-                            className={`px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer ${hoverSubId === sid ? "bg-gray-100 dark:bg-gray-600" : ""}`}
-                            onMouseEnter={() => { setHoverSubId(sid); loadChilds(sid); }}
-                            onClick={() => { setHoverSubId(sid); loadChilds(sid); }}
+                      (subMap[hoverCatId] || []).map((sub) => (
+                        <li
+                          key={sub._id}
+                          className={`px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer ${
+                            hoverSubId === sub._id ? "bg-gray-100 dark:bg-gray-600" : ""
+                          }`}
+                          onMouseEnter={() => {
+                            setHoverSubId(sub._id);
+                            loadChilds(sub._id);
+                          }}
+                          onClick={() => {
+                            // mobile/touch fallback
+                            setHoverSubId(sub._id);
+                            loadChilds(sub._id);
+                          }}
+                        >
+                          <Link
+                            to={`/shop?category=${encodeURIComponent(
+                              getCatName(hoverCatId)
+                            )}&sub=${encodeURIComponent(sub.name)}`}
+                            onClick={() => setCategoryShow(false)}
                           >
-                            <Link
-                              to={`/shop?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(sub.name)}`}
-                              onClick={() => setCategoryShow(false)}
-                            >
-                              {sub.name}
-                            </Link>
-                          </li>
-                        );
-                      })
+                            {sub.name}
+                          </Link>
+                        </li>
+                      ))
                     ) : (
                       <li className="px-4 py-2 text-sm text-gray-400">Select a category</li>
                     )}
@@ -193,24 +212,30 @@ const Navbar = ({ categories }) => {
 
                 {/* Column 3: Child Categories */}
                 <div className="max-h-[320px] overflow-auto">
-                  <h4 className="px-4 pt-3 text-xs uppercase tracking-wider text-gray-500">Child Categories</h4>
+                  <h4 className="px-4 pt-3 text-xs uppercase tracking-wider text-gray-500">
+                    Child Categories
+                  </h4>
                   <ul className="py-2">
                     {loadingChild && !childMap[hoverSubId] ? (
                       <li className="px-4 py-2 text-sm text-gray-400">Loading...</li>
                     ) : (childMap[hoverSubId] || []).length ? (
-                      (childMap[hoverSubId] || []).map((child) => {
-                        const cid = toKey(child._id);
-                        return (
-                          <li key={cid} className="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                            <Link
-                              to={`/shop?category=${encodeURIComponent(getCatName(hoverCatId))}&sub=${encodeURIComponent(getSubName(hoverCatId, hoverSubId))}&child=${encodeURIComponent(child.name)}`}
-                              onClick={() => setCategoryShow(false)}
-                            >
-                              {child.name}
-                            </Link>
-                          </li>
-                        );
-                      })
+                      (childMap[hoverSubId] || []).map((child) => (
+                        <li
+                          key={child._id}
+                          className="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                        >
+                          <Link
+                            to={`/shop?category=${encodeURIComponent(
+                              getCatName(hoverCatId)
+                            )}&sub=${encodeURIComponent(
+                              getSubName(hoverCatId, hoverSubId)
+                            )}&child=${encodeURIComponent(child.name)}`}
+                            onClick={() => setCategoryShow(false)}
+                          >
+                            {child.name}
+                          </Link>
+                        </li>
+                      ))
                     ) : (
                       <li className="px-4 py-2 text-sm text-gray-400">Select a sub category</li>
                     )}
@@ -222,25 +247,22 @@ const Navbar = ({ categories }) => {
 
           {/* Search Bar with 3-level selects (responsive) */}
           <div className="flex-1 w-full">
-            <form onSubmit={handleSearch} className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded md:rounded-full shadow-sm overflow-hidden p-2 md:p-0">
+            <form
+              onSubmit={handleSearch}
+              className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded md:rounded-full shadow-sm overflow-hidden p-2 md:p-0"
+            >
               <div className="flex flex-col md:flex-row items-stretch gap-2 md:gap-0">
                 {/* Category select */}
                 <select
                   id="category"
                   name="category"
-                  onChange={(e) => {
-                    const v = toKey(e.target.value);
-                    setSelCatId(v);
-                    setSelSubId("");
-                    setSelChildId("");
-                    loadSubs(v); // immediate fetch
-                  }}
-                  value={toKey(selCatId)}
+                  onChange={(e) => setSelCatId(e.target.value)}
+                  value={selCatId}
                   className="w-full md:w-auto px-3 py-2 bg-transparent outline-none text-sm text-gray-700 dark:text-gray-300 md:border-r border-gray-300 dark:border-gray-600 cursor-pointer"
                 >
                   <option value="">Category</option>
                   {categories?.map((cat) => (
-                    <option value={toKey(cat?._id)} key={toKey(cat?._id)}>
+                    <option value={cat?._id} key={cat?._id}>
                       {cat?.name}
                     </option>
                   ))}
@@ -250,19 +272,14 @@ const Navbar = ({ categories }) => {
                 <select
                   id="sub_category"
                   name="sub_category"
-                  onChange={(e) => {
-                    const v = toKey(e.target.value);
-                    setSelSubId(v);
-                    setSelChildId("");
-                    loadChilds(v); // immediate fetch
-                  }}
-                  value={toKey(selSubId)}
+                  onChange={(e) => setSelSubId(e.target.value)}
+                  value={selSubId}
                   disabled={!selCatId}
                   className="w-full md:w-auto px-3 py-2 bg-transparent outline-none text-sm text-gray-700 dark:text-gray-300 md:border-r border-gray-300 dark:border-gray-600 cursor-pointer disabled:opacity-60"
                 >
-                  <option value="">{selCatId ? (loadingSub && !(subMap[selCatId]?.length) ? "Loading..." : "Sub Category") : "Select Category"}</option>
-                  {(subMap[toKey(selCatId)] || []).map((s) => (
-                    <option key={toKey(s._id)} value={toKey(s._id)}>
+                  <option value="">{selCatId ? "Sub Category" : "Select Category"}</option>
+                  {(subMap[selCatId] || []).map((s) => (
+                    <option key={s._id} value={s._id}>
                       {s.name}
                     </option>
                   ))}
@@ -272,14 +289,14 @@ const Navbar = ({ categories }) => {
                 <select
                   id="child_category"
                   name="child_category"
-                  onChange={(e) => setSelChildId(toKey(e.target.value))}
-                  value={toKey(selChildId)}
+                  onChange={(e) => setSelChildId(e.target.value)}
+                  value={selChildId}
                   disabled={!selSubId}
                   className="w-full md:w-auto px-3 py-2 bg-transparent outline-none text-sm text-gray-700 dark:text-gray-300 md:border-r border-gray-300 dark:border-gray-600 cursor-pointer disabled:opacity-60"
                 >
-                  <option value="">{selSubId ? (loadingChild && !(childMap[selSubId]?.length) ? "Loading..." : "Child Category") : "Select Sub"}</option>
-                  {(childMap[toKey(selSubId)] || []).map((c) => (
-                    <option key={toKey(c._id)} value={toKey(c._id)}>
+                  <option value="">{selSubId ? "Child Category" : "Select Sub"}</option>
+                  {(childMap[selSubId] || []).map((c) => (
+                    <option key={c._id} value={c._id}>
                       {c.name}
                     </option>
                   ))}
@@ -296,7 +313,10 @@ const Navbar = ({ categories }) => {
                     placeholder="What do you need?"
                     className="flex-1 px-3 py-2 outline-none bg-transparent text-sm text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                   />
-                  <button type="submit" className="w-full md:w-auto bg-brand-dark hover:bg-brand md:px-6 py-2 font-semibold transition-all cursor-pointer">
+                  <button
+                    type="submit"
+                    className="w-full md:w-auto bg-brand-dark hover:bg-brand md:px-6 py-2 font-semibold transition-all cursor-pointer"
+                  >
                     Search
                   </button>
                 </div>

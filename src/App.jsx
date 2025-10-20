@@ -31,6 +31,7 @@ import ContactUsPage from "./pages/ContactUsPage/ContactUsPage"
 import Terms from "./pages/Terms/Terms";
 import SellerProducts from "./pages/SellerProducts";
 import Referral from "./pages/Referral";
+import ScrollToTop from './components/ScrollToTop';
 
 // Small gate that runs the session tracker inside Router context
 const SessionTrackerGate = () => {
@@ -100,7 +101,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* Ensure hooks that need Router context are rendered inside BrowserRouter */}
+     <ScrollToTop smooth={false} /> 
       <SessionTrackerGate />
       <WelcomeGate />
 
