@@ -2,7 +2,7 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { IoIosArrowDropright } from 'react-icons/io';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { place_order } from '../store/Reducers/orderReducer';
 
@@ -10,7 +10,6 @@ const Shipping = () => {
      const navigate = useNavigate()
     const dispatch = useDispatch()
     const { userInfo } = useSelector(state => state.auth)
-    const { order } = useSelector(state => state.order) // Added: Select order state to check success
     const { state: { products, price, shipping_fee, items } } = useLocation()
     const [res, setRes] = useState(false)
     const [state, setState] = useState({
@@ -48,14 +47,6 @@ const Shipping = () => {
         }))
     }
     
-    // Added: Listen for order success and navigate
-    useEffect(() => {
-        if (order && order._id) { // Assuming order has _id on success
-            localStorage.setItem('orderId', order._id); // Store for confirm page if needed
-            navigate('/payment'); // Or '/confirm-order' - adjust to your payment/confirm route
-        }
-    }, [order, navigate]);
-
     return (
         <div>
             <Header />
