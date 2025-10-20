@@ -88,7 +88,7 @@ const Navbar = ({ categories }) => {
     if (selSubId) params.set("sub", getSubName(selCatId, selSubId));
     if (selChildId) params.set("child", getChildName(selSubId, selChildId));
     if (searchValue) params.set("value", searchValue);
-    navigate(`/shop/search?${params.toString()}`);
+    navigate(`/shop?${params.toString()}`);
   };
 
   return (
