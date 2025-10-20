@@ -562,7 +562,7 @@ export default function ContactUsPage() {
           <div className="w-full md:h-[360px] rounded-lg overflow-hidden border">
             <iframe
               title="MM Fashion World Location"
-              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`} {/* Fixed: Use mapQuery */}
+              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`} 
               className="w-full h-full border-0"
               loading="lazy"
             />
