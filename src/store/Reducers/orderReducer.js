@@ -187,8 +187,9 @@ export const orderReducer = createSlice({
         state.loader = false;
         state.errorMessage = payload?.message || 'Order place failed';
       })
-      .addCase(place_order.fulfilled, (state) => {
+      .addCase(place_order.fulfilled, (state, action) => {
         state.loader = false;
+        state.myOrder= action.payload?.myOrder
       })
 
       // get_orders (customer list)
@@ -201,7 +202,7 @@ export const orderReducer = createSlice({
       })
       .addCase(get_orders.fulfilled, (state, action) => {
         state.loader = false;
-        state.myOrders = action.payload?.orders || [];
+        state.myOrders = action.payload?.myOrder || [];
       })
 
       // get_order (customer details)

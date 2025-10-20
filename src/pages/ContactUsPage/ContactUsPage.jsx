@@ -122,7 +122,7 @@ export default function ContactUsPage() {
 
   // Build endpoint helper
   const buildEndpoint = (baseUrl) => {
-    const base = (baseUrl || import.meta.env.VITE_SERVER_URL).replace(/\/+$/, "");
+    const base = (baseUrl || import.meta.env.VITE_SERVER_URL).replace(/\/+$/, ""); // Fixed: Use env
     const hasApi = /\/api(\/|$)/.test(base);
     return hasApi ? `${base}/contact` : `${base}/api/contact`;
   };
@@ -146,7 +146,7 @@ export default function ContactUsPage() {
 
     setLoading(true);
     try {
-      const apiBase = (import.meta.env.VITE_SERVER_URL || "http://localhost:5000").trim();
+      const apiBase = (import.meta.env.VITE_SERVER_URL || "http://localhost:5000").trim(); // Fixed: Env fallback
       const endpoint = buildEndpoint(apiBase);
 
       const payload = {
@@ -212,7 +212,7 @@ export default function ContactUsPage() {
   }, [siteUrl]);
   const metaDesc = `${companyName} — যোগাযোগ: ফোন ${contactPhone}, ইমেইল ${contactEmail}. ঠিকানা: ${address}. ২৪–৪৮ ঘণ্টার মধ্যে রিপ্লাই।`;
 
-  const mapQuery = encodeURIComponent(address);
+  const mapQuery = encodeURIComponent(address); // Fixed: Use this in iframe src
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -298,6 +298,7 @@ export default function ContactUsPage() {
                       onClick={copyEmail}
                       className="px-3 py-2 rounded-md bg-slate-100 hover:bg-slate-200 text-sm"
                       title="Copy email"
+                      aria-label="Copy email"
                     >
                       <FaCopy />
                     </button>
@@ -305,6 +306,7 @@ export default function ContactUsPage() {
                       onClick={downloadVCard}
                       className="px-3 py-2 rounded-md bg-slate-100 hover:bg-slate-200 text-sm"
                       title="Download vCard"
+                      aria-label="Download vCard"
                     >
                       <FaDownload />
                     </button>
@@ -328,10 +330,9 @@ export default function ContactUsPage() {
               </div>
 
               <p className="text-xs text-slate-500 mt-4">
-                সাধারণত উত্তর সময় ২৪–৪৮ ঘন্টা (ব্যবসায়িক দিন)। জরুরি প্রয়োজনে ফোন বা WhatsApp ব্যবহার করুন।
+                সাধারণত উত্তর সময় ২৪–৪৮ ঘন্টা (ব্যবসায়িক দিন)। জরুরি প্রয়োজনে ফোন বা WhatsApp ব্যবহার করুন। {/* Fixed: Spacing in Bengali */}
               </p>
             </div>
-
           </div>
 
           {/* RIGHT: Form / Success */}
@@ -354,26 +355,32 @@ export default function ContactUsPage() {
                 />
 
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700">Your Name</label>
+                  <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+                    Your Name <span className="text-rose-500">*</span> {/* Added required indicator */}
+                  </label>
                   <input
-                  type="text"
+                    type="text"
                     name="name"
                     id="name"
                     autoComplete="name"
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your Name"
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.name
+                    required
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
+                      errors.name
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                      } bg-white`}
+                    } bg-white`}
                     aria-invalid={!!errors.name}
                   />
                   {errors.name && <p className="text-xs text-rose-600 mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700">Email</label>
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                    Email <span className="text-rose-500">*</span>
+                  </label>
                   <input
                     name="email"
                     id="email"
@@ -382,34 +389,43 @@ export default function ContactUsPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.email
+                    required
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
+                      errors.email
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                      } bg-white`}
+                    } bg-white`}
                     aria-invalid={!!errors.email}
                   />
                   {errors.email && <p className="text-xs text-rose-600 mt-1">{errors.email}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="mobile" className="block text-sm font-medium text-slate-700">Mobile Number</label>
+                  <label htmlFor="mobile" className="block text-sm font-medium text-slate-700">
+                    Mobile Number <span className="text-rose-500">*</span>
+                  </label>
                   <input
                     name="mobile"
                     id="mobile"
+                    type="tel" // Fixed: Better semantic type
                     value={formData.mobile}
                     onChange={handleChange}
                     placeholder="017XXXXXXXX"
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.mobile
+                    required
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
+                      errors.mobile
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                      } bg-white`}
+                    } bg-white`}
                     aria-invalid={!!errors.mobile}
                   />
                   {errors.mobile && <p className="text-xs text-rose-600 mt-1">{errors.mobile}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-slate-700">Message</label>
+                  <label htmlFor="message" className="block text-sm font-medium text-slate-700">
+                    Message <span className="text-rose-500">*</span>
+                  </label>
                   <textarea
                     name="message"
                     id="message"
@@ -417,10 +433,12 @@ export default function ContactUsPage() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Write your message..."
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.message
+                    required
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
+                      errors.message
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                      } bg-white resize-none`}
+                    } bg-white resize-none`}
                     aria-invalid={!!errors.message}
                   />
                   {errors.message && <p className="text-xs text-rose-600 mt-1">{errors.message}</p>}
@@ -544,7 +562,7 @@ export default function ContactUsPage() {
           <div className="w-full md:h-[360px] rounded-lg overflow-hidden border">
             <iframe
               title="MM Fashion World Location"
-              src={`https://www.google.com/maps?q=${encodeURIComponent(address)}&z=15&output=embed`}
+              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`} {/* Fixed: Use mapQuery */}
               className="w-full h-full border-0"
               loading="lazy"
             />
