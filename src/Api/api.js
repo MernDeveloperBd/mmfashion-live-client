@@ -1,6 +1,6 @@
 import axios from 'axios'
 const local = 'http://localhost:5000'
-const production = 'https://mmfashion-live-server.onrender.com'
+const production = import.meta.env.VITE_SERVER_URL
 
 let api_url = ''
 let mode = 'pro'

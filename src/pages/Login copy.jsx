@@ -206,7 +206,7 @@ const Login = () => {
                     className="text-emerald-600 hover:underline ml-1"
                     target="_blank"
                     rel="noreferrer"
-                    href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}
+                    href={`${import.meta.env.VITE_DASHBOARD_URL}`}
                   >
                     Login to seller account
                   </a>

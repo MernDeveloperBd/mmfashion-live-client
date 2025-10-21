@@ -167,7 +167,7 @@ const Referral = () => {
                 placeholder="my-name-123"
                 autoComplete="off"
                 spellCheck="false"
-                pattern="[-a-z0-9]{3,30}"  // বা pattern="^[a-z0-9\\-]{3,30}$"
+                pattern="^[a-z0-9-]{3,30}$"
               />
               <button
                 disabled={isSaveDisabled}

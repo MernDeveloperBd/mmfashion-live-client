@@ -34,15 +34,15 @@ export const place_order = createAsyncThunk(
 
 export const get_orders = createAsyncThunk(
   'order/get_orders',
-  async ({ customerId, status }, { rejectWithValue, fulfillWithValue ,getState}) => {
+  async ({ customerId, status }, { rejectWithValue, fulfillWithValue, getState }) => {
     const token = getState().auth.token
-        const config = {
-            headers: {
-                'authorization': `Bearer ${token}`
-            }
-        }
+    const config = {
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    }
     try {
-      const { data } = await axios.get(`${base_url}/api/home/customer/gat-orders/${customerId}/${status}`,config);
+      const { data } = await axios.get(`${base_url}/api/home/customer/gat-orders/${customerId}/${status}`, config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to load orders' });
@@ -52,15 +52,15 @@ export const get_orders = createAsyncThunk(
 
 export const get_order = createAsyncThunk(
   'order/get_order',
-  async (orderId, { rejectWithValue, fulfillWithValue,getState }) => {
+  async (orderId, { rejectWithValue, fulfillWithValue, getState }) => {
     const token = getState().auth.token
-        const config = {
-            headers: {
-                'authorization': `Bearer ${token}`
-            }
-        }
+    const config = {
+      headers: {
+        'authorization': `Bearer ${token}`
+      }
+    }
     try {
-      const { data } = await axios.get(`${base_url}/api/home/customer/gat-order/${orderId}`,config);
+      const { data } = await axios.get(`${base_url}/api/home/customer/gat-order/${orderId}`, config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to load order' });
@@ -78,7 +78,7 @@ export const get_admin_order = createAsyncThunk(
       const token = getState().auth.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
       // আপনার backend রুট যদি আলাদা হয়, এখানটা বদলান
-      const { data } = await api.get(`/admin/order/get-order/${orderId}`, config);
+      const { data } = await axios.get(`${base_url}/api/admin/order/get-order/${orderId}`, config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to load admin order' });
@@ -93,7 +93,7 @@ export const admin_order_status_update = createAsyncThunk(
       const token = getState().auth.token;
       const config = { headers: { Authorization: `Bearer ${token}` } };
       // আপনার backend রুট যদি আলাদা হয়, এখানটা বদলান
-      const { data } = await api.put(`/admin/order/status-update/${orderId}`, info, config);
+      const { data } = await axios.put(`${base_url}/api/admin/order/status-update/${orderId}`, info, config);
       return fulfillWithValue(data);
     } catch (error) {
       return rejectWithValue(error?.response?.data || { message: 'Failed to update status' });
@@ -110,7 +110,7 @@ export const get_bkash_by_order = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const { data } = await api.get(`/payment/bkash/by-order/${orderId}`, config);
+      const { data } = await axios.get(`${base_url}/api/payment/bkash/by-order/${orderId}`, config);
       return fulfillWithValue(data);
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: 'Network error' });
@@ -124,7 +124,7 @@ export const approve_bkash_payment = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const { data } = await api.post(`/payment/bkash/approve`, { paymentId, note }, config);
+      const { data } = await axios.post(`${base_url}/api/payment/bkash/approve`, { paymentId, note }, config);
       return fulfillWithValue({ ...data, orderId });
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: 'Network error' });
@@ -138,7 +138,7 @@ export const reject_bkash_payment = createAsyncThunk(
     try {
       const token = getState().auth.token;
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const { data } = await api.post(`/payment/bkash/reject`, { paymentId, reason }, config);
+      const { data } = await axios.post(`${base_url}/api/payment/bkash/reject`, { paymentId, reason }, config);
       return fulfillWithValue(data);
     } catch (err) {
       return rejectWithValue(err.response?.data || { message: 'Network error' });
@@ -189,7 +189,7 @@ export const orderReducer = createSlice({
       })
       .addCase(place_order.fulfilled, (state, action) => {
         state.loader = false;
-        state.myOrder= action.payload?.myOrder
+        state.myOrder = action.payload?.myOrder
       })
 
       // get_orders (customer list)
@@ -202,7 +202,14 @@ export const orderReducer = createSlice({
       })
       .addCase(get_orders.fulfilled, (state, action) => {
         state.loader = false;
-        state.myOrders = action.payload?.myOrder || [];
+        const payload = action.payload || {};
+        const list =
+          payload.myOrders ||
+          payload.orders ||
+          payload.data ||
+          payload.result ||
+          [];
+        state.myOrders = Array.isArray(list) ? list : [];
       })
 
       // get_order (customer details)

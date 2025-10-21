@@ -145,8 +145,8 @@ export default function ContactUsPage() {
 
     setLoading(true);
     try {
-      const apiBase = (import.meta.env.VITE_SERVER_URL || "http://localhost:5000").trim(); // Fixed: Env fallback
-      const endpoint = buildEndpoint(apiBase);
+      const apiBase = (import.meta.env.VITE_SERVER_URL || '').replace(/\/+$/, '');
+      const endpoint = `${apiBase}/api/contact`; // ব্যাকএন্ডে আপনার রাউট যদি /api/contact হয়
 
       const payload = {
         name: formData.name.trim(),
@@ -364,11 +364,10 @@ export default function ContactUsPage() {
                     onChange={handleChange}
                     placeholder="Your Name"
                     required
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
-                      errors.name
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.name
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                    } bg-white`}
+                      } bg-white`}
                     aria-invalid={!!errors.name}
                   />
                   {errors.name && <p className="text-xs text-rose-600 mt-1">{errors.name}</p>}
@@ -387,11 +386,10 @@ export default function ContactUsPage() {
                     onChange={handleChange}
                     placeholder="you@example.com"
                     required
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
-                      errors.email
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.email
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                    } bg-white`}
+                      } bg-white`}
                     aria-invalid={!!errors.email}
                   />
                   {errors.email && <p className="text-xs text-rose-600 mt-1">{errors.email}</p>}
@@ -409,11 +407,10 @@ export default function ContactUsPage() {
                     onChange={handleChange}
                     placeholder="017XXXXXXXX"
                     required
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
-                      errors.mobile
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.mobile
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                    } bg-white`}
+                      } bg-white`}
                     aria-invalid={!!errors.mobile}
                   />
                   {errors.mobile && <p className="text-xs text-rose-600 mt-1">{errors.mobile}</p>}
@@ -431,11 +428,10 @@ export default function ContactUsPage() {
                     onChange={handleChange}
                     placeholder="Write your message..."
                     required
-                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${
-                      errors.message
+                    className={`mt-1 w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 ${errors.message
                         ? "border-rose-300 focus:ring-rose-200"
                         : "border-slate-200 focus:ring-emerald-200"
-                    } bg-white resize-none`}
+                      } bg-white resize-none`}
                     aria-invalid={!!errors.message}
                   />
                   {errors.message && <p className="text-xs text-rose-600 mt-1">{errors.message}</p>}
@@ -559,7 +555,7 @@ export default function ContactUsPage() {
           <div className="w-full md:h-[360px] rounded-lg overflow-hidden border">
             <iframe
               title="MM Fashion World Location"
-              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`} 
+              src={`https://www.google.com/maps?q=${mapQuery}&z=15&output=embed`}
               className="w-full h-full border-0"
               loading="lazy"
             />

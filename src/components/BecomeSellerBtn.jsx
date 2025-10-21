@@ -4,7 +4,7 @@ const BecomeSellerBtn = () => {
     return (
         <div>
             <a
-  href={`${import.meta.env.VITE_DASHBOARD_URL}/login`}
+  href={`${import.meta.env.VITE_DASHBOARD_URL}`}
   target="_blank"
   rel="noreferrer"
   title="Become a seller"

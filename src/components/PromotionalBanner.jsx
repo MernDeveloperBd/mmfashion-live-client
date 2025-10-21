@@ -347,7 +347,7 @@ const PromotionalBanner = () => {
 
               <div className="cta-row">
                 <Link
-                  to={`${import.meta.env.VITE_DASHBOARD_URL}/login`}
+                  to={`${import.meta.env.VITE_DASHBOARD_URL}`}
                   className="btn btn-primary"
                   aria-label="Join as reseller"
                 >
